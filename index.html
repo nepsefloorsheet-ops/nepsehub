@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | NEPSE Hub</title>
+    <link rel="shortcut icon" href="img/favicon/NH.png" type="image/x-icon" />
+    <link rel="stylesheet" href="src/css/global.css" />
+    <link rel="stylesheet" href="src/css/dashboard/index.css" />
+    <link rel="stylesheet" href="src/css/dashboard/ticker.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&family=Roboto+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="src/js/auth-guard.js"></script>
+    <link rel="stylesheet" href="src/css/dashboard/chart.css" />
+</head>
+
+  <body>
+    <div id="layout"></div>
+    <main class="active" role="main">
+      <header class="header">
+        <div class="header-items">
+          <div class="header-group">
+            <div class="header-col">
+              <span class="header-col-label">NEPSE Index</span>
+              <div id="nepseData" class="flex gap-10 items-baseline">
+                <span class="index-value">--</span>
+                <div class="flex column">
+                  <span class="difference">--</span>
+                  <span class="percent-ch">(--)</span>
+                </div>
+              </div>
+            </div>
+            <div class="divider-v"></div>
+            <span class="pulse-dot" id="headerPulse"></span>
+            <div class="turnover-volume">
+              <div class="header-col">
+                <div class="header-col-item">
+                  <span class="header-col-label">Total Turnover</span>
+                  <span class="header-col-value turnover">--</span>
+                </div>
+                <div class="header-col-item">
+                  <span class="header-col-label">Total Volume</span>
+                  <span class="header-col-value volume">--</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="header-group">
+            <div class="header-col right">
+              <span
+                id="currentDate"
+                class="header-col-label"
+                style="font-size: 0.9rem"
+                >---, -- ---</span
+              >
+              <span
+                id="currentTime"
+                class="header-col-value"
+                style="font-size: 0.9rem"
+                >--:--:--</span
+              >
+            </div>
+            <div class="divider-v"></div>
+            <div class="header-col items-center">
+              <div class="flex items-center gap-8" style="margin-bottom: 2px">
+                <span id="market-status" class="market-pill">Checking...</span>
+              </div>
+              <div class="theme-switcher">
+                <button class="theme-btn" data-theme="dark" title="Dark Mode">
+                  <i class="fa-solid fa-moon"></i>
+                </button>
+                <button class="theme-btn" data-theme="light" title="Light Mode">
+                  <i class="fa-regular fa-sun"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <!-- STOCK TICKER -->
+      <div class="ticker-container" aria-live aria-live="polite">
+        <div class="ticker-wrapper2" id="tickerWrapper">
+          <div class="ticker-scroll" id="tickerScroll"></div>
+        </div>
+      </div>
+      <!-- CONTENT -->
+      <!-- CONTENT -->
+      <div class="content gap-16">
+        <!-- ROW 1: MARKET OVERVIEW & MOVERS (50/50) -->
+        <div class="dashboard-main-grid flex2 gap-16">
+          <!-- LEFT: CHART & DETAILED STATS (50%) -->
+          <div class="w-50">
+            <div class="chart-container h-100">
+              <div class="chart-header flex space-between items-center mb-10">
+                <h2 class="section-title-sm">NEPSE Index Overview</h2>
+                <div class="time-selector flex gap-4">
+                  <button class="time-btn active" data-time="1D">1D</button>
+                  <button class="time-btn" data-time="1W">1W</button>
+                  <button class="time-btn" data-time="1M">1M</button>
+                  <button class="time-btn" data-time="3M">3M</button>
+                  <button class="time-btn" data-time="6M">6M</button>
+                  <button class="time-btn" data-time="1Y">1Y</button>
+                </div>
+              </div>
+              
+              <div class="chart-containers" style="position: relative; height: 380px;">
+                <div class="chart-placeholder shimmer" id="chartPlaceholder">
+                  <div class="text-center p-20">
+                    <i class="fas fa-chart-line fa-2x mb-10 opacity-30"></i>
+                    <p>Loading market data...</p>
+                  </div>
+                </div>
+                <canvas id="marketChart" style="display: none;"></canvas>
+              </div>
+
+              <!-- MARKET PULSE & DETAILED STATS -->
+              <div class="market-pulse-bar mt-16">
+                <div class="pulse-grid detailed-stats">
+                  <div class="pulse-item">
+                    <span class="pulse-label">Scrip Traded</span>
+                    <span class="pulse-value" id="totalTraded">--</span>
+                  </div>
+                  <div class="pulse-item">
+                    <span class="pulse-label success">Advanced</span>
+                    <span class="pulse-value success" id="advances">--</span>
+                  </div>
+                  <div class="pulse-item">
+                    <span class="pulse-label danger">Declined</span>
+                    <span class="pulse-value danger" id="declines">--</span>
+                  </div>
+                  <div class="pulse-item">
+                    <span class="pulse-label">Unchanged</span>
+                    <span class="pulse-value" id="unchanged">--</span>
+                  </div>
+                  <div class="pulse-item">
+                    <span class="pulse-label success">Pos. Circuit</span>
+                    <span class="pulse-value success" id="positiveCircuits">--</span>
+                  </div>
+                  <div class="pulse-item">
+                    <span class="pulse-label danger">Neg. Circuit</span>
+                    <span class="pulse-value danger" id="negativeCircuits">--</span>
+                  </div>
+                  <div class="pulse-item">
+                    <span class="pulse-label">Transactions</span>
+                    <span class="pulse-value" id="transactionsStat">--</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: MOVERS & TOP LISTS (50%) -->
+          <div class="w-50 flex column gap-10">
+            <!-- Top Movers (Gainers/Losers) -->
+            <div class="table-card h-max-content">
+              <div class="refresh-section-inline flex space-between items-center px-12 pt-8">
+                <h3 class="section-title-sm">Market Movers</h3>
+                <button class="refresh-btn-minimal" id="refreshBtn"><i class="fas fa-sync-alt"></i></button>
+              </div>
+              <div class="flex">
+                <div class="w-50 p-5">
+                  <h4 class="gainer-title text-center mb-5" style="font-size: 0.75rem; color: var(--accent-success);">TOP GAINERS</h4>
+                  <table class="compact-table">
+                    <thead><tr><th>Symbol</th><th class="right">LTP</th><th class="right change">Change</th><th class="right">%</th></tr></thead>
+                    <tbody id="gainersContainer"></tbody>
+                  </table>
+                </div>
+                <div class="w-50 p-5 border-l">
+                  <h4 class="loser-title text-center mb-5" style="font-size: 0.75rem; color: var(--accent-danger);">TOP LOSERS</h4>
+                  <table class="compact-table">
+                    <thead><tr><th>Symbol</th><th class="right">LTP</th><th class="right change">Change</th><th class="right">%</th></tr></thead>
+                    <tbody id="losersContainer"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Top Activity (Volume/Turnover/Tr) -->
+            <div class="table-card h-max-content metrics-section">
+              <div class="tabs-section-compact px-12 py-5">
+                <div class="tabs-navigation-minimal">
+                  <button class="tab-btn-min active" data-tab="volume">Volume</button>
+                  <button class="tab-btn-min" data-tab="turnover">Turnover</button>
+                  <button class="tab-btn-min" data-tab="transactions">Trans.</button>
+                </div>
+              </div>
+              <div class="single-table-container-minimal scroll" id="metricsTableContainer">
+                <div class="loading-container">Select metrics tab</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROW 2: INDICES & ANNOUNCEMENTS (50/50, H:350px) -->
+        <div class="dashboard-analysis-row flex2 gap-16 mt-16">
+          <!-- LEFT: INDICES (50%) -->
+          <div class="w-50">
+            <div class="table-card h-510">
+              <div class="header-content"><h3 class="px-10 py-8">Market Indices</h3></div>
+              <div class="indices-tables-container scroll h-510" id="indicesContainer">
+                <div class="loading-container shimmer">Loading market indices...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: ANNOUNCEMENTS (50%) -->
+          <div class="w-50">
+            <div class="table-card h-510 news-section-wrapper" style="margin: 0; border: 1px solid var(--border-color);">
+              <div class="news-feed-header px-12 py-8 flex space-between items-center border-b">
+                <h3 class="section-title-sm"><i class="fas fa-bullhorn"></i> NEPSE Announcements</h3>
+              </div>
+              <div class="news-feed-content scroll h-310">
+                <div class="news-list" id="tickerTrack">
+                  <div class="loading"><div class="spinner"></div><span>Loading announcements...</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- QUICK ACCESS BAR -->
+        <div class="quick-access-bar flex items-center justify-center gap-20 mt-16 py-10 bg-surface rounded-12">
+          <a href="pages/live-market.html" class="quick-link-item"><i class="fas fa-chart-line"></i> <span>Live Market</span></a>
+          <div class="dot-divider"></div>
+          <a href="pages/confluence.html" class="quick-link-item"><i class="fas fa-layer-group"></i> <span>Confluence</span></a>
+          <div class="dot-divider"></div>
+          <a href="pages/rsi.html" class="quick-link-item"><i class="fas fa-wave-square"></i> <span>RSI</span></a>
+          <div class="dot-divider"></div>
+          <a href="pages/breakouts.html" class="quick-link-item"><i class="fas fa-bolt"></i> <span>Breakouts</span></a>
+          <div class="dot-divider"></div>
+          <a href="pages/heatmap.html" class="quick-link-item"><i class="fas fa-th"></i> <span>Heatmap</span></a>
+          <div class="dot-divider"></div>
+          <a href="pages/market-depth.html" class="quick-link-item"><i class="fas fa-layer-group"></i> <span>Market Depth</span></a>
+        </div>
+
+        <!-- ROW 3: OFFERINGS (FULL WIDTH) -->
+        <div class="dashboard-offerings-section gap-16 mt-16">
+          <div class="w-100">
+            <div class="table-card offerings-card h-max-content">
+              <div class="tabs-section-offerings">
+                <div class="tabs-navigation-minimal" id="offeringTabs">
+                  <button class="tab-btn-min active" data-type="ipo-general">IPO</button>
+                  <button class="tab-btn-min" data-type="ipo-local">Local</button>
+                  <button class="tab-btn-min" data-type="ipo-foreign">Foreign</button>
+                  <button class="tab-btn-min" data-type="fpo">FPO</button>
+                  <button class="tab-btn-min" data-type="right-share">Right</button>
+                  <button class="tab-btn-min" data-type="mutual-fund">Mutual Fund</button>
+                  <button class="tab-btn-min" data-type="debenture">Debenture</button>
+                </div>
+              </div>
+              <div class="single-table-container-minimal scroll" id="offeringTableContainer" style="max-height: 300px">
+                <div class="loading-container shimmer">Loading...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal (preserved) -->
+        <div class="modal" id="announcementModal">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 id="modalTitle">Announcement Details</h4>
+              <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+              <div id="modalContent"></div>
+              <div class="announcement-actions">
+                <a class="action-btn pdf" id="pdfLink" target="_blank" rel="noopener"><i class="fas fa-file-pdf"></i> View PDF</a>
+                <button class="action-btn" id="closeDetails"><i class="fas fa-times"></i> Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </main>
+    <script src="src/js/utils/cleanup-manager.js?v=1"></script>
+    <script src="src/js/utils/error-handler.js?v=1"></script>
+    <script src="src/js/services/api-service.js?v=1"></script>
+    <script defer src="src/js/layout.js?v=1"></script>
+    <script defer src="src/js/global.js?v=1"></script>
+    <script src="src/js/services/auth-service.js?v=1"></script>
+    <script defer src="src/js/dashboard/index.js?v=1"></script>
+    <script defer src="src/js/dashboard/chart.js?v=1"></script>
+    <script defer src="src/js/dashboard/ticker.js?v=1"></script>
+    <script defer src="src/js/dashboard/offerings.js?v=1"></script>
+  </body>
+</html>

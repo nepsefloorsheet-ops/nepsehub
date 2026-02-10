@@ -1,0 +1,44 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/sector-rotation",
+      "destination": "/pages/sector-rotation.html"
+    },
+    { "source": "/heatmap", "destination": "/pages/heatmap.html" },
+    { "source": "/live-market", "destination": "/pages/live-market.html" },
+    { "source": "/market-depth", "destination": "/pages/market-depth.html" },
+    { "source": "/watchlist", "destination": "/pages/watchlist.html" },
+    { "source": "/portfolio", "destination": "/pages/portfolio.html" },
+    {
+      "source": "/broker-summary",
+      "destination": "/pages/broker-summary.html"
+    },
+    {
+      "source": "/holdings-analytics",
+      "destination": "/pages/holdings-analytics.html"
+    },
+    { "source": "/rsi", "destination": "/pages/rsi.html" },
+    { "source": "/ma", "destination": "/pages/ma.html" },
+    { "source": "/crossovers", "destination": "/pages/crossovers.html" },
+    { "source": "/confluence", "destination": "/pages/confluence.html" },
+    { "source": "/candlesticks", "destination": "/pages/candlesticks.html" },
+    {
+      "source": "/volume-shockers",
+      "destination": "/pages/volume-shockers.html"
+    },
+    { "source": "/breakouts", "destination": "/pages/breakouts.html" },
+    { "source": "/calculator", "destination": "/pages/calculator.html" },
+    {
+      "source": "/target-calculator",
+      "destination": "/pages/target-calculator.html"
+    },
+    {
+      "source": "/buy-units-calc",
+      "destination": "/pages/buy-units-calc.html"
+    },
+    { "source": "/reviews", "destination": "/pages/reviews.html" },
+    { "source": "/login", "destination": "/pages/login.html" },
+    { "source": "/signup", "destination": "/pages/signup.html" }
+  ]
+}
