@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Reviews | NEPSE Hub</title>
+    <link rel="shortcut icon" href="../img/favicon/NH.png" type="image/x-icon" />
+    <link rel="stylesheet" href="../src/css/global.css" />
+    <link rel="stylesheet" href="../src/css/utils/reviews.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&family=Roboto+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div id="layout"></div>
+    <main class="active">
+      <header class="header">
+        <div class="header-items">
+          <div class="header-group">
+            <div class="header-col">
+              <span class="header-col-label">NEPSE Index</span>
+              <div id="nepseData" class="flex gap-10 items-baseline">
+                <span class="index-value">--</span>
+                <div class="flex column">
+                  <span class="difference">--</span>
+                  <span class="percent-ch">(--)</span>
+                </div>
+              </div>
+            </div>
+            <div class="divider-v"></div>
+            <span class="pulse-dot" id="headerPulse"></span>
+            <div class="turnover-volume">
+              <div class="header-col">
+                <div class="header-col-item">
+                  <span class="header-col-label">Total Turnover</span>
+                  <span class="header-col-value turnover">--</span>
+                </div>
+                <div class="header-col-item">
+                  <span class="header-col-label">Total Volume</span>
+                  <span class="header-col-value volume">--</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="header-group">
+            <div class="header-col right">
+              <span
+                id="currentDate"
+                class="header-col-label"
+                style="font-size: 0.9rem"
+                >---, -- ---</span
+              >
+              <span
+                id="currentTime"
+                class="header-col-value"
+                style="font-size: 0.9rem"
+                >--:--:--</span
+              >
+            </div>
+            <div class="divider-v"></div>
+            <div class="header-col items-center">
+              <div class="flex items-center gap-8" style="margin-bottom: 2px">
+                <span id="market-status" class="market-pill">Checking...</span>
+              </div>
+              <div class="theme-switcher">
+                <button class="theme-btn" data-theme="dark" title="Dark Mode">
+                  <i class="fa-solid fa-moon"></i>
+                </button>
+                <button class="theme-btn" data-theme="light" title="Light Mode">
+                  <i class="fa-regular fa-sun"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <section class="reviews-section">
+          <div class="reviews-header">
+            <h2><i class="fas fa-star-half-stroke"></i> Platform Reviews</h2>
+            <p class="subtitle">
+              Your feedback helps us make NEPSE Hub better for everyone.
+            </p>
+          </div>
+
+          <div class="reviews-container">
+            <!-- Review Form -->
+            <div class="review-form-card">
+              <h3><i class="fas fa-pen-to-square"></i> Submit a Review</h3>
+              <form
+                id="reviewForm"
+                action="https://formspree.io/f/xqedzlrd"
+                method="POST"
+              >
+                <div class="form-group">
+                  <label for="name">Full Name</label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    class="form-input"
+                    placeholder="Enter your name"
+                    required
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="email">Email Address</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="form-input"
+                    placeholder="Enter your email"
+                    required
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label>Your Rating</label>
+                  <div class="star-rating">
+                    <input
+                      type="radio"
+                      id="star5"
+                      name="rating"
+                      value="5"
+                      required
+                    /><label for="star5" title="5 stars"
+                      ><i class="fas fa-star"></i
+                    ></label>
+                    <input
+                      type="radio"
+                      id="star4"
+                      name="rating"
+                      value="4"
+                    /><label for="star4" title="4 stars"
+                      ><i class="fas fa-star"></i
+                    ></label>
+                    <input
+                      type="radio"
+                      id="star3"
+                      name="rating"
+                      value="3"
+                    /><label for="star3" title="3 stars"
+                      ><i class="fas fa-star"></i
+                    ></label>
+                    <input
+                      type="radio"
+                      id="star2"
+                      name="rating"
+                      value="2"
+                    /><label for="star2" title="2 stars"
+                      ><i class="fas fa-star"></i
+                    ></label>
+                    <input
+                      type="radio"
+                      id="star1"
+                      name="rating"
+                      value="1"
+                    /><label for="star1" title="1 star"
+                      ><i class="fas fa-star"></i
+                    ></label>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="message">Your Experience</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    class="form-textarea"
+                    placeholder="Tell us what you think about NEPSE Hub..."
+                    required
+                  ></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                  <span>Send Review</span>
+                  <i class="fas fa-paper-plane"></i>
+                </button>
+                <div
+                  id="formStatus"
+                  style="
+                    margin-top: 15px;
+                    text-align: center;
+                    font-size: 0.9rem;
+                    display: none;
+                  "
+                ></div>
+              </form>
+            </div>
+
+            <!-- Recent Reviews -->
+            <div class="recent-reviews-card">
+              <h3><i class="fas fa-comments"></i> Community Feedback</h3>
+              <div id="reviewsList">
+                <div class="review-item">
+                  <div class="review-user">
+                    <span class="user-name">Rabin K.C.</span>
+                    <div class="review-stars">
+                      <i class="fas fa-star"></i><i class="fas fa-star"></i
+                      ><i class="fas fa-star"></i><i class="fas fa-star"></i
+                      ><i class="fas fa-star"></i>
+                    </div>
+                  </div>
+                  <p class="review-text">
+                    The broker holding analysis is a game changer for NEPSE
+                    traders. Extremely helpful and accurate!
+                  </p>
+                  <div class="review-date">Submitted 2 days ago</div>
+                </div>
+
+                <div class="review-item">
+                  <div class="review-user">
+                    <span class="user-name">Sita Sharma</span>
+                    <div class="review-stars">
+                      <i class="fas fa-star"></i><i class="fas fa-star"></i
+                      ><i class="fas fa-star"></i><i class="fas fa-star"></i
+                      ><i class="far fa-star"></i>
+                    </div>
+                  </div>
+                  <p class="review-text">
+                    Love the UI. It's much cleaner than other platforms. Would
+                    love to see more technical indicators added soon.
+                  </p>
+                  <div class="review-date">Submitted 5 days ago</div>
+                </div>
+
+                <div class="review-item">
+                  <div class="review-user">
+                    <span class="user-name">Anish Pradhan</span>
+                    <div class="review-stars">
+                      <i class="fas fa-star"></i><i class="fas fa-star"></i
+                      ><i class="fas fa-star"></i><i class="fas fa-star"></i
+                      ><i class="fas fa-star"></i>
+                    </div>
+                  </div>
+                  <p class="review-text">
+                    The real-time market depth and sector rotation charts are
+                    fantastic. Keep up the good work!
+                  </p>
+                  <div class="review-date">Submitted 1 week ago</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script src="../src/js/utils/cleanup-manager.js?v=2"></script>
+    <script src="../src/js/services/api-service.js?v=2"></script>
+    <script defer src="../src/js/layout.js?v=2"></script>
+    <script defer src="../src/js/global.js?v=2"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById("reviewForm");
+        const status = document.getElementById("formStatus");
+        const submitBtn = document.getElementById("submitBtn");
+        const nameInput = document.getElementById("name");
+        const emailInput = document.getElementById("email");
+
+        // 🔹 Auth Check & Auto-fill
+        function checkAuth() {
+          const sessionStr = localStorage.getItem(
+            "sb-ywdaixuumhbuecfsgsni-auth-token",
+          );
+          if (sessionStr) {
+            try {
+              const session = JSON.parse(sessionStr);
+              const user = session.user;
+              if (user) {
+                // Populate name if metadata exists
+                if (user.user_metadata?.full_name) {
+                  nameInput.value = user.user_metadata.full_name;
+                } else {
+                  nameInput.value = user.email.split("@")[0];
+                }
+
+                // Populate and LOCK email
+                emailInput.value = user.email;
+                emailInput.readOnly = true;
+                emailInput.style.opacity = "0.7";
+                emailInput.style.cursor = "not-allowed";
+                emailInput.title = "Review is linked to your account email";
+
+                return true;
+              }
+            } catch (e) {
+              console.error("Error parsing session:", e);
+            }
+          }
+          return false;
+        }
+
+        const isLoggedIn = checkAuth();
+
+        if (!isLoggedIn) {
+          // If not logged in, we can either block submission or let them know
+          submitBtn.disabled = true;
+          submitBtn.style.opacity = "0.5";
+          submitBtn.style.cursor = "not-allowed";
+          status.style.display = "block";
+          status.style.color = "var(--accent-warning)";
+          status.innerHTML =
+            '<i class="fas fa-exclamation-triangle"></i> Please <a href="login.html" style="text-decoration: underline; color: inherit;">Log In</a> to submit a review.';
+        }
+
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          if (!isLoggedIn) {
+            status.textContent = "You must be logged in to submit a review.";
+            return;
+          }
+
+          const formData = new FormData(form);
+          submitBtn.disabled = true;
+          submitBtn.innerHTML =
+            '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+          try {
+            const response = await fetch(form.action, {
+              method: "POST",
+              body: formData,
+              headers: {
+                Accept: "application/json",
+              },
+            });
+
+            if (response.ok) {
+              status.style.display = "block";
+              status.style.color = "#10b981";
+              status.textContent =
+                "Thank you for your feedback! Your review has been sent successfully.";
+              form.reset();
+              checkAuth(); // Re-fill the name/email after reset
+            } else {
+              const data = await response.json();
+              status.style.display = "block";
+              status.style.color = "#ef4444";
+              status.textContent = data.errors
+                ? data.errors.map((error) => error.message).join(", ")
+                : "Oops! There was a problem submitting your form";
+            }
+          } catch (error) {
+            status.style.display = "block";
+            status.style.color = "#ef4444";
+            status.textContent =
+              "Oops! There was a problem submitting your form";
+          } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML =
+              '<span>Send Review</span> <i class="fas fa-paper-plane"></i>';
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

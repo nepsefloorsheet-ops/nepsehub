@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RSI Screener | NEPSE Hub</title>
+    <link rel="shortcut icon" href="../img/favicon/NH.png" type="image/x-icon" />
+    <link rel="stylesheet" href="../src/css/global.css" />
+    <link rel="stylesheet" href="../src/css/market/rsi.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&family=Roboto+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div id="layout"></div>
+    <main class="active">
+      <header class="header">
+        <div class="header-items">
+          <div class="header-group">
+            <div class="header-col">
+              <span class="header-col-label">NEPSE Index</span>
+              <div id="nepseData" class="flex gap-10 items-baseline">
+                <span class="index-value">--</span>
+                <div class="flex column">
+                  <span class="difference">--</span>
+                  <span class="percent-ch">(--)</span>
+                </div>
+              </div>
+            </div>
+            <div class="divider-v"></div>
+            <span class="pulse-dot" id="headerPulse"></span>
+            <div class="turnover-volume">
+              <div class="header-col">
+                <div class="header-col-item">
+                  <span class="header-col-label">Total Turnover</span>
+                  <span class="header-col-value turnover">--</span>
+                </div>
+                <div class="header-col-item">
+                  <span class="header-col-label">Total Volume</span>
+                  <span class="header-col-value volume">--</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="header-group">
+            <div class="header-col right">
+              <span
+                id="currentDate"
+                class="header-col-label"
+                style="font-size: 0.9rem"
+                >---, -- ---</span
+              >
+              <span
+                id="currentTime"
+                class="header-col-value"
+                style="font-size: 0.9rem"
+                >--:--:--</span
+              >
+            </div>
+            <div class="divider-v"></div>
+            <div class="header-col items-center">
+              <div class="flex items-center gap-8" style="margin-bottom: 2px">
+                <span id="market-status" class="market-pill">Checking...</span>
+              </div>
+              <div class="theme-switcher">
+                <button class="theme-btn" data-theme="dark" title="Dark Mode">
+                  <i class="fa-solid fa-moon"></i>
+                </button>
+                <button class="theme-btn" data-theme="light" title="Light Mode">
+                  <i class="fa-regular fa-sun"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div class="content">
+        <section>
+          <div class="tool-header">
+            <div class="tool-title-section">
+              <h2>
+                <i
+                  class="fas fa-wave-square"
+                  style="color: var(--accent-primary)"
+                ></i>
+                RSI Momentum Screener
+                <span id="stock-count-badge" class="count-badge u-hidden"
+                  >0</span
+                >
+              </h2>
+              <p class="subtitle">
+                Identify overbought and oversold opportunities using Relative
+                Strength Index.
+              </p>
+            </div>
+            <div class="header-actions">
+              <button id="refresh-technical-btn" class="refresh-tool-btn">
+                <i class="fas fa-sync-alt"></i> Refresh Data
+              </button>
+            </div>
+          </div>
+
+          <div class="scanner-controls">
+            <div class="control-group">
+              <label><i class="fas fa-search"></i> Symbol Search</label>
+              <div class="search-wrapper">
+                <input
+                  type="text"
+                  id="symbol-search"
+                  class="search-input"
+                  placeholder="e.g. NICA, HDL..."
+                />
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label>RSI Range Filter</label>
+              <div class="range-inputs">
+                <div class="input-with-label">
+                  <span>Min</span>
+                  <input
+                    type="number"
+                    id="min-rsi"
+                    value="0"
+                    min="0"
+                    max="100"
+                  />
+                </div>
+                <div class="input-with-label">
+                  <span>Max</span>
+                  <input
+                    type="number"
+                    id="max-rsi"
+                    value="100"
+                    min="0"
+                    max="100"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="button-group">
+              <button id="apply-filter" class="primary-btn">
+                Apply Filter
+              </button>
+              <button id="reset-btn" class="secondary-btn">Reset</button>
+            </div>
+          </div>
+
+          <div class="table-container" id="tableContainer">
+            <table id="rsiTable" class="professional-table">
+              <thead>
+                <tr>
+                  <th style="text-align: left">Symbol</th>
+                  <th class="right">LTP</th>
+                  <th class="right">RSI (14)</th>
+                  <th class="middle">Market Zone</th>
+                </tr>
+              </thead>
+              <tbody id="rsi-data">
+                <!-- Data injected by JS -->
+              </tbody>
+            </table>
+            <div id="no-results" class="empty-state u-hidden">
+              <i class="fas fa-search"></i>
+              <p>No stocks found matching your criteria</p>
+              <button id="retry-all" class="text-link">
+                Clear filters and show all stocks
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <div id="error-container" class="toast-container"></div>
+
+    <script src="../src/js/utils/cleanup-manager.js?v=2"></script>
+    <script src="../src/js/utils/error-handler.js?v=2"></script>
+    <script src="../src/js/services/api-service.js?v=2"></script>
+    <script defer src="../src/js/layout.js?v=2"></script>
+    <script defer src="../src/js/global.js?v=2"></script>
+    <script defer src="../src/js/market/rsi.js?v=2"></script>
+  </body>
+</html>

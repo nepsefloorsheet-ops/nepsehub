@@ -1,0 +1,901 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Features | NEPSE Hub</title>
+    <link rel="shortcut icon" href="../img/favicon/NH.png" type="image/x-icon" />
+    <link rel="stylesheet" href="../src/css/global.css" />
+    <link rel="stylesheet" href="../src/css/market/features.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&family=Roboto+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div id="layout"></div>
+    <main class="active">
+      <header class="header">
+        <div class="header-items">
+          <div class="header-group">
+            <div class="header-col">
+              <span class="header-col-label">NEPSE Index</span>
+              <div id="nepseData" class="flex gap-10 items-baseline">
+                <span class="index-value">--</span>
+                <div class="flex column">
+                  <span class="difference">--</span>
+                  <span class="percent-ch">(--)</span>
+                </div>
+              </div>
+            </div>
+            <div class="divider-v"></div>
+            <span class="pulse-dot" id="headerPulse"></span>
+            <div class="turnover-volume">
+              <div class="header-col">
+                <div class="header-col-item">
+                  <span class="header-col-label">Total Turnover</span>
+                  <span class="header-col-value turnover">--</span>
+                </div>
+                <div class="header-col-item">
+                  <span class="header-col-label">Total Volume</span>
+                  <span class="header-col-value volume">--</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="header-group">
+            <div class="header-col right">
+              <span
+                id="currentDate"
+                class="header-col-label"
+                style="font-size: 0.9rem"
+                >---, -- ---</span
+              >
+              <span
+                id="currentTime"
+                class="header-col-value"
+                style="font-size: 0.9rem"
+                >--:--:--</span
+              >
+            </div>
+            <div class="divider-v"></div>
+            <div class="header-col items-center">
+              <div class="flex items-center gap-8" style="margin-bottom: 2px">
+                <span id="market-status" class="market-pill">Checking...</span>
+              </div>
+              <div class="theme-switcher">
+                <button class="theme-btn" data-theme="dark" title="Dark Mode">
+                  <i class="fa-solid fa-moon"></i>
+                </button>
+                <button class="theme-btn" data-theme="light" title="Light Mode">
+                  <i class="fa-regular fa-sun"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content features-content">
+        <!-- Hero Section -->
+        <div class="hero-section">
+          <div class="hero-badge">
+            <i class="fas fa-rocket"></i> Project Showcase
+          </div>
+          <h1 class="hero-title">
+            NEPSE Trading Dashboard
+            <span class="gradient-text">Features</span>
+          </h1>
+          <p class="hero-subtitle">
+            A comprehensive, professional-grade stock market dashboard built for
+            traders and investors
+          </p>
+        </div>
+
+        <!-- Stats Summary -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon pages">
+              <i class="fas fa-file-code"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-number">12</span>
+              <span class="stat-label">Pages</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon components">
+              <i class="fas fa-puzzle-piece"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-number">20+</span>
+              <span class="stat-label">Components</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon features">
+              <i class="fas fa-star"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-number">50+</span>
+              <span class="stat-label">Features</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon tech">
+              <i class="fas fa-code"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-number">5</span>
+              <span class="stat-label">Technologies</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pages Section -->
+        <section class="feature-section">
+          <div class="section-header">
+            <h2><i class="fas fa-layer-group"></i> Pages Built</h2>
+          </div>
+          <div class="pages-grid">
+            <a href="../index.html" class="page-card">
+              <div class="page-icon dashboard">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <h3>Main Dashboard</h3>
+              <p>
+                Central hub with NEPSE index, charts, market summary, and
+                real-time data
+              </p>
+              <span class="page-link"
+                >Visit Page <i class="fas fa-arrow-right"></i
+              ></span>
+            </a>
+            <a href="live-market.html" class="page-card">
+              <div class="page-icon live">
+                <i class="fas fa-broadcast-tower"></i>
+              </div>
+              <h3>Live Market</h3>
+              <p>
+                Real-time stock prices with filtering, sorting, and advanced
+                search
+              </p>
+              <span class="page-link"
+                >Visit Page <i class="fas fa-arrow-right"></i
+              ></span>
+            </a>
+            <a href="heatmap.html" class="page-card">
+              <div class="page-icon heatmap">
+                <i class="fas fa-th-large"></i>
+              </div>
+              <h3>Market Heatmap</h3>
+              <p>
+                Visual market representation with turnover/volume views and
+                sector filtering
+              </p>
+              <span class="page-link"
+                >Visit Page <i class="fas fa-arrow-right"></i
+              ></span>
+            </a>
+            <a href="sector-rotation.html" class="page-card">
+              <div class="page-icon rotation">
+                <i class="fas fa-arrows-spin"></i>
+              </div>
+              <h3>Sector Rotation</h3>
+              <p>
+                Analyze market sectors with price strength and money flow
+                insights
+              </p>
+              <span class="page-link"
+                >Visit Page <i class="fas fa-arrow-right"></i
+              ></span>
+            </a>
+            <a href="rsi.html" class="page-card">
+              <div
+                class="page-icon"
+                style="
+                  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+                  color: white;
+                "
+              >
+                <i class="fas fa-wave-square"></i>
+              </div>
+              <h3>RSI Screener</h3>
+              <p>Identify overbought and oversold opportunities using RSI</p>
+              <span class="page-link"
+                >Visit Page <i class="fas fa-arrow-right"></i
+              ></span>
+            </a>
+            <a href="ma.html" class="page-card">
+              <div
+                class="page-icon"
+                style="
+                  background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+                  color: white;
+                "
+              >
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <h3>Moving Average Dashboard</h3>
+              <p>
+                Track price trends and support levels using Simple Moving
+                Averages
+              </p>
+              <span class="page-link"
+                >Visit Page <i class="fas fa-arrow-right"></i
+              ></span>
+            </a>
+            <a href="crossovers.html" class="page-card">
+              <div
+                class="page-icon"
+                style="
+                  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+                  color: white;
+                "
+              >
+                <i class="fas fa-bolt"></i>
+              </div>
+              <h3>MA Crossovers</h3>
+              <p>Golden Cross and Death Cross momentum signals</p>
+              <span class="page-link"
+                >Visit Page <i class="fas fa-arrow-right"></i
+              ></span>
+            </a>
+            <a href="candlesticks.html" class="page-card">
+              <div
+                class="page-icon"
+                style="
+                  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+                  color: white;
+                "
+              >
+                <i class="fas fa-fire-flame-curved"></i>
+              </div>
+              <h3>Candlestick AI</h3>
+              <p>
+                Real-time identification of high-probability price action
+                patterns
+              </p>
+              <span class="page-link"
+                >Visit Page <i class="fas fa-arrow-right"></i
+              ></span>
+            </a>
+            <a href="confluence.html" class="page-card">
+              <div
+                class="page-icon"
+                style="
+                  background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+                  color: white;
+                "
+              >
+                <i class="fas fa-layer-group"></i>
+              </div>
+              <h3>Confluence Score Scanner</h3>
+              <p>
+                Institutional-grade Super-Signal combining RSI, MA, and
+                Crossovers
+              </p>
+              <span class="page-link"
+                >Visit Page <i class="fas fa-arrow-right"></i
+              ></span>
+            </a>
+            <a href="breakouts.html" class="page-card">
+              <div
+                class="page-icon"
+                style="
+                  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+                  color: white;
+                "
+              >
+                <i class="fas fa-angles-up"></i>
+              </div>
+              <h3>Breakout Scanner</h3>
+              <p>Real-time alerts for stocks hitting 52-week Highs or Lows</p>
+              <span class="page-link"
+                >Visit Page <i class="fas fa-arrow-right"></i
+              ></span>
+            </a>
+            <a href="volume-shockers.html" class="page-card">
+              <div
+                class="page-icon"
+                style="
+                  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+                  color: white;
+                "
+              >
+                <i class="fas fa-volleyball"></i>
+              </div>
+              <h3>Volume Shockers</h3>
+              <p>
+                Finding "Big Money" footprints where volume is >300% of average
+              </p>
+              <span class="page-link"
+                >Visit Page <i class="fas fa-arrow-right"></i
+              ></span>
+            </a>
+            <a href="calculator.html" class="page-card">
+              <div
+                class="page-icon"
+                style="
+                  background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+                  color: white;
+                "
+              >
+                <i class="fas fa-receipt"></i>
+              </div>
+              <h3>Broker Fee Calculator</h3>
+              <p>
+                Calculate exact NEPSE trading costs including commissions and
+                CGT
+              </p>
+              <span class="page-link"
+                >Visit Page <i class="fas fa-arrow-right"></i
+              ></span>
+            </a>
+          </div>
+        </section>
+
+        <!-- Features List -->
+        <section class="feature-section">
+          <div class="section-header">
+            <h2><i class="fas fa-check-circle"></i> What's Been Built</h2>
+          </div>
+
+          <div class="features-accordion">
+            <!-- Dashboard Features -->
+            <div class="accordion-item active">
+              <div class="accordion-header">
+                <div class="accordion-title">
+                  <span class="feature-category dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                  </span>
+                  <h3>Dashboard Features</h3>
+                </div>
+                <i class="fas fa-chevron-down accordion-icon"></i>
+              </div>
+              <div class="accordion-content">
+                <ul class="feature-list">
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>NEPSE Index Display</strong>
+                      <span
+                        >Real-time index value with change indicators and
+                        percentage</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Interactive Chart</strong>
+                      <span
+                        >Multiple timeframes (1D, 1W, 1M, 3M, 6M, 1Y) with
+                        Chart.js</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Market Summary Stats</strong>
+                      <span
+                        >Advances, Declines, Unchanged, Positive/Negative
+                        Circuits</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Market Sentiment Gauge</strong>
+                      <span
+                        >Visual indicator showing Fear/Neutral/Greed
+                        levels</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Indices & Sub-Indices</strong>
+                      <span
+                        >All NEPSE sector indices with real-time updates</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Top Gainers & Losers</strong>
+                      <span
+                        >Dynamic tables showing best and worst performers</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Top Volume/Turnover/Transactions</strong>
+                      <span>Tabbed interface for different market metrics</span>
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Stock Ticker</strong>
+                      <span>Scrolling ticker with real-time price updates</span>
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>NEPSE Announcements</strong>
+                      <span
+                        >News feed with modal for detailed announcement
+                        viewing</span
+                      >
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Live Market Features -->
+            <div class="accordion-item">
+              <div class="accordion-header">
+                <div class="accordion-title">
+                  <span class="feature-category live">
+                    <i class="fas fa-broadcast-tower"></i>
+                  </span>
+                  <h3>Live Market Features</h3>
+                </div>
+                <i class="fas fa-chevron-down accordion-icon"></i>
+              </div>
+              <div class="accordion-content">
+                <ul class="feature-list">
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Real-time Data Table</strong>
+                      <span
+                        >All stocks with LTP, LTV, Change, Open, High, Low,
+                        Volume, Turnover</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Symbol Search</strong>
+                      <span
+                        >Quick search functionality to find specific
+                        stocks</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Sector Filtering</strong>
+                      <span
+                        >Filter by Commercial Banks, Hydro Power, Insurance,
+                        etc.</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Quick Filters</strong>
+                      <span
+                        >Click on Advances/Declines/Neutral to filter
+                        instantly</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Sticky Header</strong>
+                      <span>Table header stays visible while scrolling</span>
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Auto Refresh</strong>
+                      <span
+                        >Automatic data updates with last updated
+                        timestamp</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Scroll Indicators</strong>
+                      <span
+                        >Visual cues for horizontal scrolling on mobile</span
+                      >
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Sector Rotation Features -->
+            <div class="accordion-item">
+              <div class="accordion-header">
+                <div class="accordion-title">
+                  <span class="feature-category rotation">
+                    <i class="fas fa-arrows-spin"></i>
+                  </span>
+                  <h3>Sector Rotation Features</h3>
+                </div>
+                <i class="fas fa-chevron-down accordion-icon"></i>
+              </div>
+              <div class="accordion-content">
+                <ul class="feature-list">
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Price Strength Mode</strong>
+                      <span
+                        >Analyze sectors based on average percentage
+                        change</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Money Flow Mode</strong>
+                      <span
+                        >Track market share and turnover distribution across
+                        sectors</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Sector Detail Panels</strong>
+                      <span
+                        >Deep-dive into specific sectors with live metrics and
+                        top performers</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>A/D Ratio Visualization</strong>
+                      <span
+                        >Visual bar chart showing advances, declines, and
+                        unchanged stocks per sector</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Top Sector Performers</strong>
+                      <span
+                        >Instant view of best and worst performing stocks within
+                        each sector</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Cross-Page Navigation</strong>
+                      <span
+                        >Quick filters to jump from sector view to Heatmap or
+                        Live Market</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Auto-Refresh Timer</strong>
+                      <span
+                        >Built-in countdown for real-time market pulse
+                        updates</span
+                      >
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Heatmap Features -->
+            <div class="accordion-item">
+              <div class="accordion-header">
+                <div class="accordion-title">
+                  <span class="feature-category heatmap">
+                    <i class="fas fa-th-large"></i>
+                  </span>
+                  <h3>Heatmap Features</h3>
+                </div>
+                <i class="fas fa-chevron-down accordion-icon"></i>
+              </div>
+              <div class="accordion-content">
+                <ul class="feature-list">
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Treemap Visualization</strong>
+                      <span
+                        >D3.js powered treemap with dynamic sizing based on
+                        market activity</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Turnover View</strong>
+                      <span>Size boxes based on trading turnover value</span>
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Volume View</strong>
+                      <span>Size boxes based on trading volume</span>
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Color-coded Performance</strong>
+                      <span
+                        >Green for gains, red for losses, with intensity based
+                        on magnitude</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Sector Filter</strong>
+                      <span
+                        >Focus on specific sectors with dropdown filter</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Hover Tooltips</strong>
+                      <span
+                        >Detailed info on hover including LTP, change, and
+                        turnover data</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Legend Guide</strong>
+                      <span>Color legend for easy interpretation</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- UI/UX Features -->
+            <div class="accordion-item">
+              <div class="accordion-header">
+                <div class="accordion-title">
+                  <span class="feature-category ui">
+                    <i class="fas fa-palette"></i>
+                  </span>
+                  <h3>UI/UX Features</h3>
+                </div>
+                <i class="fas fa-chevron-down accordion-icon"></i>
+              </div>
+              <div class="accordion-content">
+                <ul class="feature-list">
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Dark/Light Theme</strong>
+                      <span
+                        >Theme switcher with smooth transitions and
+                        persistence</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Shimmer Loading States</strong>
+                      <span>Premium loading animations while data loads</span>
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Pulsating Live Indicator</strong>
+                      <span>Animated dot showing live data connection</span>
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Responsive Design</strong>
+                      <span
+                        >Works seamlessly on desktop, tablet, and mobile</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Market Status Display</strong>
+                      <span
+                        >Shows if market is Open/Closed with visual
+                        indicators</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Real-time Clock</strong>
+                      <span>Current date, day, and time display in header</span>
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Roboto Mono Typography</strong>
+                      <span>Clean, professional trading-style font</span>
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Premium Glassmorphism</strong>
+                      <span
+                        >Modern glass-like UI elements with blur effects</span
+                      >
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Technical Features -->
+            <div class="accordion-item">
+              <div class="accordion-header">
+                <div class="accordion-title">
+                  <span class="feature-category tech">
+                    <i class="fas fa-cogs"></i>
+                  </span>
+                  <h3>Technical Features</h3>
+                </div>
+                <i class="fas fa-chevron-down accordion-icon"></i>
+              </div>
+              <div class="accordion-content">
+                <ul class="feature-list">
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>API Integration</strong>
+                      <span
+                        >Live data from NEPSE through proxy API service</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Error Handling</strong>
+                      <span
+                        >Graceful error handling with user-friendly
+                        messages</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Cleanup Manager</strong>
+                      <span
+                        >Proper resource cleanup for intervals and event
+                        listeners</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>CSP Compliance</strong>
+                      <span
+                        >No inline scripts, all event handlers via
+                        addEventListener</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Cache Busting</strong>
+                      <span
+                        >Version query params for updated script loading</span
+                      >
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fas fa-check"></i>
+                    <div>
+                      <strong>Modular Architecture</strong>
+                      <span
+                        >Organized JS/CSS files by feature and component</span
+                      >
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tech Stack -->
+        <section class="feature-section">
+          <div class="section-header">
+            <h2><i class="fas fa-code"></i> Tech Stack</h2>
+          </div>
+          <div class="tech-grid">
+            <div class="tech-card">
+              <i class="fab fa-html5"></i>
+              <span>HTML5</span>
+            </div>
+            <div class="tech-card">
+              <i class="fab fa-css3-alt"></i>
+              <span>CSS3</span>
+            </div>
+            <div class="tech-card">
+              <i class="fab fa-js"></i>
+              <span>JavaScript</span>
+            </div>
+            <div class="tech-card">
+              <i class="fas fa-chart-bar"></i>
+              <span>Chart.js</span>
+            </div>
+            <div class="tech-card">
+              <i class="fas fa-project-diagram"></i>
+              <span>D3.js</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="features-footer">
+          <p>NEPSE Trading Dashboard &copy; 2026</p>
+          <p class="muted">Built with passion for traders</p>
+        </footer>
+      </div>
+    </main>
+    <script src="../src/js/utils/cleanup-manager.js?v=2"></script>
+    <script src="../src/js/utils/error-handler.js?v=2"></script>
+    <script src="../src/js/services/api-service.js?v=2"></script>
+    <script defer src="../src/js/layout.js?v=2"></script>
+    <script defer src="../src/js/global.js?v=2"></script>
+    <script defer src="../src/js/market/features.js?v=1"></script>
+  </body>
+</html>

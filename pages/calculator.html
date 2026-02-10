@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Broker Fee Calculator | NEPSE Hub</title>
+    <link rel="shortcut icon" href="../img/favicon/NH.png" type="image/x-icon" />
+    <link rel="stylesheet" href="../src/css/global.css" />
+    <link rel="stylesheet" href="../src/css/utils/calculator.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&family=Roboto+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div id="layout"></div>
+    <main class="active">
+      <header class="header">
+        <div class="header-items">
+          <div class="header-group">
+            <div class="header-col">
+              <span class="header-col-label">NEPSE Index</span>
+              <div id="nepseData" class="flex gap-10 items-baseline">
+                <span class="index-value">--</span>
+                <div class="flex column">
+                  <span class="difference">--</span>
+                  <span class="percent-ch">(--)</span>
+                </div>
+              </div>
+            </div>
+            <div class="divider-v"></div>
+            <span class="pulse-dot" id="headerPulse"></span>
+            <div class="turnover-volume">
+              <div class="header-col">
+                <div class="header-col-item">
+                  <span class="header-col-label">Total Turnover</span>
+                  <span class="header-col-value turnover">--</span>
+                </div>
+                <div class="header-col-item">
+                  <span class="header-col-label">Total Volume</span>
+                  <span class="header-col-value volume">--</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="header-group">
+            <div class="header-col right">
+              <span
+                id="currentDate"
+                class="header-col-label"
+                style="font-size: 0.9rem"
+                >---, -- ---</span
+              >
+              <span
+                id="currentTime"
+                class="header-col-value"
+                style="font-size: 0.9rem"
+                >--:--:--</span
+              >
+            </div>
+            <div class="divider-v"></div>
+            <div class="header-col items-center">
+              <div class="flex items-center gap-8" style="margin-bottom: 2px">
+                <span id="market-status" class="market-pill">Checking...</span>
+              </div>
+              <div class="theme-switcher">
+                <button class="theme-btn" data-theme="dark" title="Dark Mode">
+                  <i class="fa-solid fa-moon"></i>
+                </button>
+                <button class="theme-btn" data-theme="light" title="Light Mode">
+                  <i class="fa-regular fa-sun"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <section class="calculator-section">
+          <div class="calc-header">
+            <h2>
+              <i class="fas fa-receipt"></i> Broker Fee & Profit Simulator
+            </h2>
+            <p class="subtitle">
+              Calculate exact NEPSE trading costs including commissions, SEBON
+              fees, and CGT.
+            </p>
+          </div>
+
+          <div class="calculator-grid">
+            <!-- INPUT PANEL -->
+            <div class="calc-card input-card">
+              <h3>Trade Details</h3>
+              <div class="input-group">
+                <label>Purchase Price (NPR)</label>
+                <input
+                  type="number"
+                  id="buy-price"
+                  placeholder="e.g. 500"
+                  step="0.01"
+                />
+              </div>
+              <div class="input-group">
+                <label>Selling Price (NPR)</label>
+                <input
+                  type="number"
+                  id="sell-price"
+                  placeholder="e.g. 550"
+                  step="0.01"
+                />
+              </div>
+              <div class="input-group">
+                <label>Quantity (Units)</label>
+                <input
+                  type="number"
+                  id="units"
+                  placeholder="e.g. 100"
+                  step="1"
+                />
+              </div>
+              <div class="input-group">
+                <label>Holding Period (CGT Type)</label>
+                <select id="cgt-type" class="select-input">
+                  <option value="7.5">Individual / Short Term (7.5%)</option>
+                  <option value="5.0">
+                    Individual / Long Term (>1yr) (5.0%)
+                  </option>
+                  <option value=" corporate">Corporate (10%)</option>
+                </select>
+              </div>
+              <button id="calculate-btn" class="primary-btn">
+                Calculate Profit
+              </button>
+            </div>
+
+            <!-- RESULT PANEL -->
+            <div class="calc-card result-card">
+              <h3>Summary</h3>
+              <div class="result-item main-stat">
+                <span>Net Profit / Loss</span>
+                <span id="net-profit" class="value">Rs. 0.00</span>
+              </div>
+              <div class="result-divider"></div>
+
+              <div class="details-list">
+                <div class="result-item">
+                  <span>Purchase Amount</span>
+                  <span id="buy-total">Rs. 0.00</span>
+                </div>
+                <div class="result-item">
+                  <span>Sales Amount</span>
+                  <span id="sell-total">Rs. 0.00</span>
+                </div>
+                <div class="result-item">
+                  <span>Total Broker Commission</span>
+                  <span id="total-comm">Rs. 0.00</span>
+                </div>
+                <div class="result-item">
+                  <span>SEBON Fees (0.015%)</span>
+                  <span id="total-sebon">Rs. 0.00</span>
+                </div>
+                <div class="result-item">
+                  <span>Capital Gains Tax (CGT)</span>
+                  <span id="total-cgt">Rs. 0.00</span>
+                </div>
+                <div class="result-item">
+                  <span>DP Charge & Other</span>
+                  <span>Rs. 50.00</span>
+                </div>
+              </div>
+
+              <div class="profit-gauge">
+                <div id="profit-percentage" class="percentage-label">0.00%</div>
+                <div class="gauge-bg">
+                  <div id="gauge-fill" class="gauge-fill"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="commission-info">
+            <h4>NEPSE Commission Structure</h4>
+            <ul>
+              <li>
+                Up to Rs. 50k: <strong>0.36%</strong> | 50k to 500k:
+                <strong>0.33%</strong>
+              </li>
+              <li>
+                500k to 2M: <strong>0.31%</strong> | 2M to 10M:
+                <strong>0.27%</strong>
+              </li>
+              <li>Above 10M: <strong>0.24%</strong></li>
+              <li>All commission and SEBON fee include both buy and sell</li>
+            </ul>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script src="../src/js/utils/cleanup-manager.js?v=2"></script>
+    <script src="../src/js/services/api-service.js?v=2"></script>
+    <script defer src="../src/js/layout.js?v=2"></script>
+    <script defer src="../src/js/global.js?v=2"></script>
+    <script defer src="../src/js/utils/calculator.js?v=2"></script>
+  </body>
+</html>

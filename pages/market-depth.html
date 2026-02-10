@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Market Depth | NEPSE Hub</title>
+    <link rel="shortcut icon" href="../img/favicon/NH.png" type="image/x-icon" />
+    <link rel="stylesheet" href="../src/css/global.css" />
+    <link rel="stylesheet" href="../src/css/dashboard/index.css" />
+    <link rel="stylesheet" href="../src/css/dashboard/market-depth.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&family=Roboto+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="../src/js/auth-guard.js"></script>
+  </head>
+
+  <body>
+    <div id="layout"></div>
+    <main class="active" role="main">
+      <header class="header">
+        <div class="header-items">
+          <div class="header-group">
+            <div class="header-col">
+              <span class="header-col-label">NEPSE Index</span>
+              <div id="nepseData" class="flex gap-10 items-baseline">
+                <span class="index-value">--</span>
+                <div class="flex column">
+                  <span class="difference">--</span>
+                  <span class="percent-ch">(--)</span>
+                </div>
+              </div>
+            </div>
+            <div class="divider-v"></div>
+            <span class="pulse-dot" id="headerPulse"></span>
+            <div class="turnover-volume">
+              <div class="header-col">
+                <div class="header-col-item">
+                  <span class="header-col-label">Total Turnover</span>
+                  <span class="header-col-value turnover">--</span>
+                </div>
+                <div class="header-col-item">
+                  <span class="header-col-label">Total Volume</span>
+                  <span class="header-col-value volume">--</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="header-group">
+            <div class="header-col right">
+              <span
+                id="currentDate"
+                class="header-col-label"
+                style="font-size: 0.9rem"
+                >---, -- ---</span
+              >
+              <span
+                id="currentTime"
+                class="header-col-value"
+                style="font-size: 0.9rem"
+                >--:--:--</span
+              >
+            </div>
+            <div class="divider-v"></div>
+            <div class="header-col items-center">
+              <div class="flex items-center gap-8" style="margin-bottom: 2px">
+                <span id="market-status" class="market-pill">Checking...</span>
+              </div>
+              <div class="theme-switcher">
+                <button class="theme-btn" data-theme="dark" title="Dark Mode">
+                  <i class="fa-solid fa-moon"></i>
+                </button>
+                <button class="theme-btn" data-theme="light" title="Light Mode">
+                  <i class="fa-regular fa-sun"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <div
+          class="header-content flex space-between items-center mb-16 p-12 bg-card rounded-12"
+        >
+          <h2 class="section-title-sm">
+            <i class="fas fa-layer-group"></i> Market Depth:
+            <span id="current-symbol" style="color: var(--accent-primary)"
+              >---</span
+            >
+          </h2>
+          <div class="flex gap-10">
+            <input
+              type="text"
+              id="symbol-input"
+              placeholder="Enter Symbol (e.g. NEPSE)"
+              style="
+                background: var(--surface-bg);
+                border: 1px solid var(--border-color);
+                color: white;
+                padding: 6px 12px;
+                border-radius: 6px;
+                outline: none;
+              "
+            />
+            <button
+              onclick="handleSearch()"
+              class="refresh-btn-small"
+              style="
+                background: var(--accent-primary);
+                color: white;
+                border: none;
+              "
+            >
+              Search
+            </button>
+          </div>
+        </div>
+
+        <div class="main-depth-flex gap-16">
+          <!-- Security Info Card (Left) -->
+          <div class="security-info-card-container">
+            <div class="security-info-card">
+              <div class="company-header" id="info-company-name">
+                Company: ---
+              </div>
+              <div class="security-header" id="info-security-name">
+                Security name: ---
+              </div>
+
+              <table class="info-table">
+                <tr id="row-point">
+                  <td class="info-label">Point</td>
+                  <td class="info-value" id="info-point">0.00</td>
+                </tr>
+                <tr id="row-percent-change">
+                  <td class="info-label">% Change</td>
+                  <td class="info-value" id="info-percent-change">0.00</td>
+                </tr>
+                <tr>
+                  <td class="info-label">LTP</td>
+                  <td class="info-value" id="info-ltp">0.0</td>
+                </tr>
+                <tr>
+                  <td class="info-label">Avg Price</td>
+                  <td class="info-value" id="info-avg-price">0.0</td>
+                </tr>
+                <tr>
+                  <td class="info-label">Open</td>
+                  <td class="info-value" id="info-open">0.0</td>
+                </tr>
+                <tr>
+                  <td class="info-label">D High</td>
+                  <td class="info-value" id="info-d-high">0.0</td>
+                </tr>
+                <tr>
+                  <td class="info-label">D Low</td>
+                  <td class="info-value" id="info-d-low">0.0</td>
+                </tr>
+                <tr>
+                  <td class="info-label">Close</td>
+                  <td class="info-value" id="info-close">0.0</td>
+                </tr>
+                <tr>
+                  <td class="info-label">LTQ</td>
+                  <td class="info-value" id="info-ltq">0</td>
+                </tr>
+                <tr>
+                  <td class="info-label">Volume</td>
+                  <td class="info-value" id="info-volume">0</td>
+                </tr>
+                <tr>
+                  <td class="info-label">LTT</td>
+                  <td class="info-value" id="info-ltt">--</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <!-- Market Depth Grid (Right) -->
+          <div
+            class="dashboard-main-grid flex gap-16"
+            style="height: auto; flex: 1"
+          >
+            <!-- Buy Orders -->
+            <div class="table-card w-50" style="padding: 0; overflow: hidden">
+              <div class="buy-header-box">TOP 5 BUY</div>
+              <table class="depth-table">
+                <thead>
+                  <tr>
+                    <th>Order</th>
+                    <th class="right">Quantity</th>
+                    <th class="right">Price</th>
+                  </tr>
+                </thead>
+                <tbody id="buy-orders">
+                  <tr>
+                    <td>0</td>
+                    <td class="right">0</td>
+                    <td class="right positive">0</td>
+                  </tr>
+                  <tr>
+                    <td>0</td>
+                    <td class="right">0</td>
+                    <td class="right positive">0</td>
+                  </tr>
+                  <tr>
+                    <td>0</td>
+                    <td class="right">0</td>
+                    <td class="right positive">0</td>
+                  </tr>
+                  <tr>
+                    <td>0</td>
+                    <td class="right">0</td>
+                    <td class="right positive">0</td>
+                  </tr>
+                  <tr>
+                    <td>0</td>
+                    <td class="right">0</td>
+                    <td class="right positive">0</td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td>Total</td>
+                    <td class="right" id="total-buy-qty">0</td>
+                    <td></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+            <!-- Sell Orders -->
+            <div class="table-card w-50" style="padding: 0; overflow: hidden">
+              <div class="sell-header-box">TOP 5 SELL</div>
+              <table class="depth-table">
+                <thead>
+                  <tr>
+                    <th>Order</th>
+                    <th class="right">Quantity</th>
+                    <th class="right">Price</th>
+                  </tr>
+                </thead>
+                <tbody id="sell-orders">
+                  <tr>
+                    <td>0</td>
+                    <td class="right">0</td>
+                    <td class="right negative">0</td>
+                  </tr>
+                  <tr>
+                    <td>0</td>
+                    <td class="right">0</td>
+                    <td class="right negative">0</td>
+                  </tr>
+                  <tr>
+                    <td>0</td>
+                    <td class="right">0</td>
+                    <td class="right negative">0</td>
+                  </tr>
+                  <tr>
+                    <td>0</td>
+                    <td class="right">0</td>
+                    <td class="right negative">0</td>
+                  </tr>
+                  <tr>
+                    <td>0</td>
+                    <td class="right">0</td>
+                    <td class="right negative">0</td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td>Total</td>
+                    <td class="right" id="total-sell-qty">0</td>
+                    <td></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="../src/js/utils/cleanup-manager.js"></script>
+    <script src="../src/js/utils/error-handler.js"></script>
+    <script src="../src/js/services/api-service.js"></script>
+    <script defer src="../src/js/layout.js"></script>
+    <script defer src="../src/js/global.js"></script>
+    <script defer src="../src/js/dashboard/market-depth.js"></script>
+  </body>
+</html>

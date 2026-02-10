@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolio Management | NEPSE Hub</title>
+    <link
+      rel="shortcut icon"
+      href="../img/favicon/NH.png"
+      type="image/x-icon"
+    />
+    <link rel="stylesheet" href="../src/css/global.css" />
+    <link rel="stylesheet" href="../src/css/pages/portfolio.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&family=Roboto+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../src/js/services/auth-service.js"></script>
+  </head>
+  <body>
+    <div id="layout"></div>
+
+    <main class="active" role="main">
+      <header class="header">
+        <div class="header-items">
+          <div class="header-group">
+            <div class="header-col">
+              <span class="header-col-label">NEPSE Index</span>
+              <div id="nepseData" class="flex gap-10 items-baseline">
+                <span class="index-value">--</span>
+                <div class="flex column">
+                  <span class="difference">--</span>
+                  <span class="percent-ch">(--)</span>
+                </div>
+              </div>
+            </div>
+            <div class="divider-v"></div>
+            <span class="pulse-dot" id="headerPulse"></span>
+            <div class="turnover-volume">
+              <div class="header-col">
+                <div class="header-col-item">
+                  <span class="header-col-label">Total Turnover</span>
+                  <span class="header-col-value turnover">--</span>
+                </div>
+                <div class="header-col-item">
+                  <span class="header-col-label">Total Volume</span>
+                  <span class="header-col-value volume">--</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="header-group">
+            <div class="header-col right">
+              <span
+                id="currentDate"
+                class="header-col-label"
+                style="font-size: 0.9rem"
+                >---, -- ---</span
+              >
+              <span
+                id="currentTime"
+                class="header-col-value"
+                style="font-size: 0.9rem"
+                >--:--:--</span
+              >
+            </div>
+            <div class="divider-v"></div>
+            <div class="header-col items-center">
+              <div class="flex items-center gap-8" style="margin-bottom: 2px">
+                <span id="market-status" class="market-pill">Checking...</span>
+              </div>
+              <div class="theme-switcher">
+                <button class="theme-btn" data-theme="dark" title="Dark Mode">
+                  <i class="fa-solid fa-moon"></i>
+                </button>
+                <button class="theme-btn" data-theme="light" title="Light Mode">
+                  <i class="fa-regular fa-sun"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="portfolio-container">
+        <!-- Dashboard Top Header -->
+        <div class="flex space-between items-end mb-20">
+          <div>
+            <h1 class="text-36 font-800 text-primary tracking-tight mb-4">
+              My <span class="text-muted font-400">Portfolio</span>
+            </h1>
+            <p class="text-secondary">Track your investments in real-time</p>
+          </div>
+          <button id="add-transaction-btn" class="btn-terminal primary">
+            <i class="fas fa-plus"></i> Add Transaction
+          </button>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="portfolio-summary-grid">
+          <div class="summary-card">
+            <div class="summary-header">
+              <div class="summary-icon investment">
+                <i class="fas fa-wallet"></i>
+              </div>
+              <span class="summary-label">Total Investment</span>
+            </div>
+            <div class="summary-value" id="total-investment">Rs 0.00</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-header">
+              <div class="summary-icon value">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <span class="summary-label">Current Value</span>
+            </div>
+            <div class="summary-value" id="current-value">Rs 0.00</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-header">
+              <div class="summary-icon profit">
+                <i class="fas fa-hand-holding-usd"></i>
+              </div>
+              <span class="summary-label">Unrealised P/L</span>
+            </div>
+            <div class="summary-value" id="unrealized-pl">Rs 0.00</div>
+            <div class="summary-footer" id="unrealized-pl-pct">0.00%</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-header">
+              <div class="summary-icon realized">
+                <i class="fas fa-piggy-bank"></i>
+              </div>
+              <span class="summary-label">Realised Profit</span>
+            </div>
+            <div class="summary-value" id="realized-pl-value">Rs 0.00</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-header">
+              <div class="summary-icon overall">
+                <i class="fas fa-coins"></i>
+              </div>
+              <span class="summary-label">Overall Profit/Loss</span>
+            </div>
+            <div class="summary-value" id="overall-pl">Rs 0.00</div>
+            <div class="summary-footer" id="overall-pl-pct">0.00%</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-header">
+              <div class="summary-icon daily">
+                <i class="fas fa-calendar-day"></i>
+              </div>
+              <span class="summary-label">Today's Change</span>
+            </div>
+            <div class="summary-value" id="today-pl">Rs 0.00</div>
+            <div class="summary-footer" id="today-pl-pct">0.00%</div>
+          </div>
+        </div>
+
+        <div class="performance-section mb-32">
+          <div class="chart-card">
+            <div class="chart-header">
+              <div class="header-left">
+                <h3 class="chart-title">Portfolio Performance</h3>
+                <p class="chart-subtitle" id="performance-note">
+                  Reconstructing 1-year historic performance...
+                </p>
+              </div>
+              <div class="chart-actions">
+                <div class="time-toggle">
+                  <button class="time-btn" data-range="1M">1M</button>
+                  <button class="time-btn" data-range="3M">3M</button>
+                  <button class="time-btn" data-range="6M">6M</button>
+                  <button class="time-btn active" data-range="1Y">1Y</button>
+                </div>
+              </div>
+            </div>
+            <div class="chart-body" style="height: 350px; position: relative">
+              <canvas id="performance-chart"></canvas>
+              <div id="performance-loader" class="chart-loader">
+                <div class="spinner"></div>
+                <span>Reconstructing Equity Curve...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- View Toggle Nav -->
+        <div class="view-toggle-nav mb-24">
+          <button class="view-tab active" data-view="holdings">
+            <i class="fas fa-briefcase mr-8"></i> Current Holdings
+          </button>
+          <button class="view-tab" data-view="history">
+            <i class="fas fa-history mr-8"></i> Transaction History
+          </button>
+        </div>
+
+        <div class="portfolio-content-grid">
+          <!-- Holdings Section -->
+          <div id="holdings-section" class="view-content active">
+            <div class="analyst-card table-card">
+              <div class="card-header-clean">
+                <div class="flex flex-end gap-16">
+                  <i class="fas fa-list-ul text-accent-primary"></i>
+                  <h3>Current Holdings</h3>
+                </div>
+              </div>
+              <div class="scrollable-table-wrap">
+                <table class="institutional-table" id="holdings-table">
+                  <thead>
+                    <tr>
+                      <th class="left">Symbol</th>
+                      <th class="left">Sector</th>
+                      <th class="right">Units</th>
+                      <th class="right">Avg. Cost</th>
+                      <th class="right">Investment</th>
+                      <th class="right">LTP</th>
+                      <th class="right">Stop Loss</th>
+                      <th class="right">Target</th>
+                      <th class="right">Receivable Amt</th>
+                      <th class="right">P&L</th>
+                      <th class="right">P&L %</th>
+                      <th class="center">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="holdings-tbody">
+                    <!-- JS populated -->
+                    <tr>
+                      <td colspan="10" class="center py-40 text-muted loading">
+                        Loading your holdings...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- History Section -->
+          <div id="history-section" class="view-content">
+            <div class="analyst-card table-card">
+              <div class="card-header-clean">
+                <div class="flex items-center gap-16">
+                  <i class="fas fa-history text-accent-secondary"></i>
+                  <h3>Transaction History</h3>
+                </div>
+              </div>
+              <div class="scrollable-table-wrap">
+                <table class="institutional-table" id="history-table">
+                  <thead>
+                    <tr>
+                      <th class="left">Date</th>
+                      <th class="left">Symbol</th>
+                      <th class="center">Type</th>
+                      <th class="right">Units</th>
+                      <th class="right">Price</th>
+                      <th class="right">Total Fee</th>
+                      <th class="right">Net Amount</th>
+                      <th class="center">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="history-tbody">
+                    <!-- JS populated -->
+                    <tr>
+                      <td colspan="8" class="text-center py-40 text-muted">
+                        No transactions found.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts Column -->
+          <div class="flex column gap-24">
+            <div class="analyst-card chart-card">
+              <div class="card-header-clean">
+                <div class="flex items-center gap-16">
+                  <i class="fas fa-chart-pie text-accent-secondary"></i>
+                  <h3>Sector Diversification</h3>
+                </div>
+              </div>
+              <div class="chart-wrap" style="height: 300px; padding: 20px">
+                <canvas id="diversification-chart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Transaction Modal -->
+      <div class="modal-overlay" id="add-modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">Record Transaction</h2>
+            <button class="close-modal" id="close-modal-btn">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <!-- Transaction Type Toggle -->
+          <div class="transaction-type-toggle mb-24">
+            <button type="button" class="type-btn active" data-type="BUY">
+              BUY
+            </button>
+            <button type="button" class="type-btn" data-type="SELL">
+              SELL
+            </button>
+          </div>
+
+          <form class="portfolio-form" id="transaction-form">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Symbol</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-search"></i>
+                  <input
+                    type="text"
+                    id="modal-symbol"
+                    placeholder="Search Symbol"
+                    required
+                    autocomplete="off"
+                  />
+                  <div id="autocomplete-list" class="autocomplete-items"></div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Units</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-layer-group"></i>
+                  <input
+                    type="number"
+                    id="modal-units"
+                    placeholder="Quantity"
+                    required
+                    min="1"
+                  />
+                </div>
+              </div>
+              <div class="form-group">
+                <label id="price-label">Price</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-tag"></i>
+                  <input
+                    type="number"
+                    id="modal-price"
+                    placeholder="Price per unit"
+                    required
+                    step="0.01"
+                  />
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Transaction Date</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-calendar-alt"></i>
+                  <input type="date" id="modal-date" required />
+                </div>
+              </div>
+
+              <div
+                class="form-group cgt-dropdown-group"
+                style="display: none; grid-column: span 2"
+              >
+                <label>Capital Gain Tax Rate</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-percent"></i>
+                  <select id="modal-cgt-rate" class="modal-select">
+                    <option value="0.05">Short Term (5%)</option>
+                    <option value="0.075">Long Term (7.5%)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Auto Fee Breakdown -->
+            <div class="fee-breakdown-section mt-20">
+              <div
+                class="fee-row symbol-avg-cost-row"
+                style="
+                  display: none;
+                  border-bottom: 1px dashed var(--border-color);
+                  padding-bottom: 8px;
+                  margin-bottom: 12px;
+                "
+              >
+                <span>Buying Avg. Cost</span>
+                <span id="fee-avg-cost">Rs 0.00</span>
+              </div>
+              <div class="fee-row profit-loss-row" style="display: none">
+                <span>Gross Profit/Loss</span>
+                <span id="fee-profit-loss">Rs 0.00</span>
+              </div>
+              <div class="fee-row">
+                <span>Purchase/Sale Value</span>
+                <span id="fee-base-value">Rs 0.00</span>
+              </div>
+              <div class="fee-row">
+                <span id="fee-comm-label">Broker Commission</span>
+                <span id="fee-commission">Rs 0.00</span>
+              </div>
+              <div class="fee-row">
+                <span>SEBON Fee (0.015%)</span>
+                <span id="fee-sebon">Rs 0.00</span>
+              </div>
+              <div class="fee-row dp-row">
+                <span>DP Charge</span>
+                <span id="fee-dp">Rs 25.00</span>
+              </div>
+              <div class="fee-row cgt-row" style="display: none">
+                <span>Estimated CGT</span>
+                <span id="fee-cgt">Rs 0.00</span>
+              </div>
+              <div
+                class="fee-row net-profit-row"
+                style="
+                  display: none;
+                  font-weight: 600;
+                  border-top: 1px dashed var(--border-color);
+                  margin-top: 8px;
+                  padding-top: 8px;
+                "
+              >
+                <span>Net Profit (After Tax)</span>
+                <span id="fee-net-profit">Rs 0.00</span>
+              </div>
+              <div class="fee-total mt-12 pt-12 border-t">
+                <span id="net-label">Net Payable</span>
+                <span id="fee-net-total">Rs 0.00</span>
+              </div>
+              <div
+                class="fee-row wacc-preview-row mt-8"
+                style="
+                  font-style: italic;
+                  border-top: 1px dotted var(--border-color);
+                  padding-top: 8px;
+                "
+              >
+                <span id="wacc-label">Effective Cost per Unit (WACC)</span>
+                <span id="fee-wacc-unit">Rs 0.00</span>
+              </div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="save-transaction-btn">
+              Confirm Transaction
+            </button>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <script src="../src/js/layout.js"></script>
+    <script src="../src/js/utils/status.js"></script>
+    <script src="../src/js/utils/cleanup-manager.js"></script>
+    <script src="../src/js/utils/error-handler.js"></script>
+    <script src="../src/js/services/api-service.js"></script>
+    <script src="../src/js/global.js"></script>
+    <script src="../src/js/market/portfolio.js"></script>
+  </body>
+</html>

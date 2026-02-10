@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Watchlist | NEPSE Hubs</title>
+    <link rel="shortcut icon" href="../img/favicon/NH.png" type="image/x-icon" />
+    <link rel="stylesheet" href="../src/css/global.css" />
+    <link rel="stylesheet" href="../src/css/dashboard/watchlist.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&family=Roboto+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="../src/js/auth-guard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+  </head>
+
+  <body>
+    <div id="layout"></div>
+
+    <main class="active" role="main">
+      <header class="header">
+        <div class="header-items">
+          <div class="header-group">
+            <div class="header-col">
+              <span class="header-col-label">NEPSE Index</span>
+              <div id="nepseData" class="flex gap-10 items-baseline">
+                <span class="index-value">--</span>
+                <div class="flex column">
+                  <span class="difference">--</span>
+                  <span class="percent-ch">(--)</span>
+                </div>
+              </div>
+            </div>
+            <div class="divider-v"></div>
+            <span class="pulse-dot" id="headerPulse"></span>
+            <div class="turnover-volume">
+              <div class="header-col">
+                <div class="header-col-item">
+                  <span class="header-col-label">Total Turnover</span>
+                  <span class="header-col-value turnover">--</span>
+                </div>
+                <div class="header-col-item">
+                  <span class="header-col-label">Total Volume</span>
+                  <span class="header-col-value volume">--</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="header-group">
+            <div class="header-col right">
+              <span
+                id="currentDate"
+                class="header-col-label"
+                style="font-size: 0.9rem"
+                >---, -- ---</span
+              >
+              <span
+                id="currentTime"
+                class="header-col-value"
+                style="font-size: 0.9rem"
+                >--:--:--</span
+              >
+            </div>
+            <div class="divider-v"></div>
+            <div class="header-col items-center">
+              <div class="flex items-center gap-8" style="margin-bottom: 2px">
+                <span id="market-status" class="market-pill">Checking...</span>
+              </div>
+              <div class="theme-switcher">
+                <button class="theme-btn" data-theme="dark" title="Dark Mode">
+                  <i class="fa-solid fa-moon"></i>
+                </button>
+                <button class="theme-btn" data-theme="light" title="Light Mode">
+                  <i class="fa-regular fa-sun"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content gap-16">
+        <div
+          class="header-content flex space-between items-center mb-16 p-12 bg-card rounded-12"
+        >
+          <h2 class="section-title-sm">
+            <i class="fas fa-list-ul"></i> My Watchlist
+          </h2>
+          <div class="flex gap-10">
+            <div
+              class="view-toggle flex bg-surface-bg p-4 rounded-8 border border-divider"
+            >
+              <button
+                id="view-table-btn"
+                class="toggle-btn active"
+                title="Table View"
+              >
+                <i class="fas fa-table"></i>
+              </button>
+              <button
+                id="view-heatmap-btn"
+                class="toggle-btn"
+                title="Heatmap View"
+              >
+                <i class="fas fa-th-large"></i>
+              </button>
+            </div>
+            <button
+              id="export-csv-btn"
+              class="action-btn"
+              style="
+                background: var(--surface-bg);
+                border: 1px solid var(--border-color);
+                color: var(--text-primary);
+                padding: 8px 16px;
+                border-radius: 8px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-weight: 500;
+              "
+            >
+              <i class="fas fa-file-export"></i> Export
+            </button>
+          </div>
+        </div>
+        <!-- Watchlist Tabs & Management -->
+        <div class="watchlist-tabs-container mb-16">
+          <div class="tabs-scroll-wrapper">
+            <div id="watchlist-tabs-list" class="flex gap-10">
+              <!-- Tabs rendered here -->
+            </div>
+            <button
+              id="add-list-btn"
+              class="tab-btn-min"
+              title="Create New List"
+            >
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Search & Add Section -->
+        <div class="watchlist-search-container">
+          <div class="search-wrapper">
+            <input
+              type="text"
+              id="symbol-input"
+              placeholder="Enter Symbol (e.g., NICA, HIDCL)..."
+            />
+            <button id="add-btn"><i class="fas fa-plus"></i> Add</button>
+            <div id="autocomplete-list" class="autocomplete-items"></div>
+          </div>
+        </div>
+
+        <!-- VIEWS WRAPPER -->
+        <div id="watchlist-views">
+          <!-- Table View (Visible by default) -->
+          <div id="table-view" class="watchlist-table-container">
+            <table id="watchlist-table">
+              <thead>
+                <tr>
+                  <th
+                    class="sortable"
+                    data-sort="symbol"
+                    style="text-align: left"
+                  >
+                    Symbol <i class="fas fa-sort"></i>
+                  </th>
+                  <th class="sortable right" data-sort="lastTradedPrice">
+                    LTP <i class="fas fa-sort"></i>
+                  </th>
+                  <th class="right">Prev. Close</th>
+                  <th class="sortable right" data-sort="change">
+                    Change <i class="fas fa-sort"></i>
+                  </th>
+                  <th class="sortable right" data-sort="percentageChange">
+                    % Change <i class="fas fa-sort"></i>
+                  </th>
+                  <th class="right">High</th>
+                  <th class="right">Low</th>
+                  <th class="sortable right" data-sort="totalTradeQuantity">
+                    Volume <i class="fas fa-sort"></i>
+                  </th>
+                  <th class="middle" style="width: 100px">Trend (1W)</th>
+                  <th class="right" style="width: 80px">Action</th>
+                </tr>
+              </thead>
+              <tbody id="watchlist-body">
+                <!-- Rows rendered here -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Heatmap View (Hidden by default) -->
+          <div
+            id="heatmap-view"
+            class="watchlist-heatmap-container"
+            style="display: none"
+          >
+            <div class="heatmap-grid" id="heatmap-grid">
+              <!-- Heatmap items rendered here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="../src/js/utils/cleanup-manager.js"></script>
+    <script src="../src/js/utils/error-handler.js"></script>
+    <script src="../src/js/services/api-service.js"></script>
+    <script src="../src/js/layout.js"></script>
+    <script src="../src/js/global.js"></script>
+    <script src="../src/js/services/auth-service.js"></script>
+    <script src="../src/js/dashboard/watchlist.js"></script>
+  </body>
+</html>

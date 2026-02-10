@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Target Price Calculator | NEPSE Hub</title>
+    <link rel="shortcut icon" href="../img/favicon/NH.png" type="image/x-icon" />
+    <link rel="stylesheet" href="../src/css/global.css" />
+    <link rel="stylesheet" href="../src/css/utils/status.css" />
+    <link
+      rel="stylesheet"
+      href="../src/css/calculators/target-calculator.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&family=Roboto+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div id="layout"></div>
+
+    <main class="active" role="main">
+      <header class="header">
+        <div class="header-items">
+          <div class="header-group">
+            <div class="header-col">
+              <span class="header-col-label">NEPSE Index</span>
+              <div id="nepseData" class="flex gap-10 items-baseline">
+                <span class="index-value">--</span>
+                <div class="flex column">
+                  <span class="difference">--</span>
+                  <span class="percent-ch">(--)</span>
+                </div>
+              </div>
+            </div>
+            <div class="divider-v"></div>
+            <span class="pulse-dot" id="headerPulse"></span>
+            <div class="turnover-volume">
+              <div class="header-col">
+                <div class="header-col-item">
+                  <span class="header-col-label">Total Turnover</span>
+                  <span class="header-col-value turnover">--</span>
+                </div>
+                <div class="header-col-item">
+                  <span class="header-col-label">Total Volume</span>
+                  <span class="header-col-value volume">--</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="header-group">
+            <div class="header-col right">
+              <span
+                id="currentDate"
+                class="header-col-label"
+                style="font-size: 0.9rem"
+                >---, -- ---</span
+              >
+              <span
+                id="currentTime"
+                class="header-col-value"
+                style="font-size: 0.9rem"
+                >--:--:--</span
+              >
+            </div>
+            <div class="divider-v"></div>
+            <div class="header-col items-center">
+              <div class="flex items-center gap-8" style="margin-bottom: 2px">
+                <span id="market-status" class="market-pill">Checking...</span>
+              </div>
+              <div class="theme-switcher">
+                <button class="theme-btn" data-theme="dark" title="Dark Mode">
+                  <i class="fa-solid fa-moon"></i>
+                </button>
+                <button class="theme-btn" data-theme="light" title="Light Mode">
+                  <i class="fa-regular fa-sun"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <div
+          class="header-content flex space-between items-center mb-16 p-12 bg-card rounded-12"
+        >
+          <h2 class="section-title-sm">
+            <i class="fas fa-bullseye"></i> Target Price Calculator
+          </h2>
+        </div>
+
+        <!-- Calculator Grid -->
+        <div class="calculator-grid">
+          <!-- 1. Risk/Reward Calculator -->
+          <div class="calc-card">
+            <div class="calc-header">
+              <i class="fas fa-balance-scale"></i>
+              <h3>Risk/Reward Calculator</h3>
+            </div>
+            <div class="calc-body">
+              <div class="input-group">
+                <label>Entry Price (Rs)</label>
+                <input
+                  type="number"
+                  id="rr-entry"
+                  placeholder="500"
+                  step="0.01"
+                />
+              </div>
+              <div class="input-group">
+                <label>Stop Loss (Rs)</label>
+                <input
+                  type="number"
+                  id="rr-stop"
+                  placeholder="480"
+                  step="0.01"
+                />
+              </div>
+              <div class="input-group">
+                <label>Target Price (Rs)</label>
+                <input
+                  type="number"
+                  id="rr-target"
+                  placeholder="540"
+                  step="0.01"
+                />
+              </div>
+              <button class="calc-btn" onclick="calculateRiskReward()">
+                <i class="fas fa-calculator"></i> Calculate
+              </button>
+              <div class="result-box" id="rr-result"></div>
+            </div>
+          </div>
+
+          <!-- 2. Position Sizing -->
+          <div class="calc-card">
+            <div class="calc-header">
+              <i class="fas fa-chart-pie"></i>
+              <h3>Position Sizing</h3>
+            </div>
+            <div class="calc-body">
+              <div class="input-group">
+                <label>Account Size (Rs)</label>
+                <input
+                  type="number"
+                  id="ps-account"
+                  placeholder="100000"
+                  step="1000"
+                />
+              </div>
+              <div class="input-group">
+                <label>Risk Per Trade (%)</label>
+                <input
+                  type="number"
+                  id="ps-risk"
+                  placeholder="2"
+                  step="0.1"
+                  min="0.1"
+                  max="10"
+                />
+              </div>
+              <div class="input-group">
+                <label>Entry Price (Rs)</label>
+                <input
+                  type="number"
+                  id="ps-entry"
+                  placeholder="500"
+                  step="0.01"
+                />
+              </div>
+              <div class="input-group">
+                <label>Stop Loss (Rs)</label>
+                <input
+                  type="number"
+                  id="ps-stop"
+                  placeholder="480"
+                  step="0.01"
+                />
+              </div>
+              <button class="calc-btn" onclick="calculatePositionSize()">
+                <i class="fas fa-calculator"></i> Calculate
+              </button>
+              <div class="result-box" id="ps-result"></div>
+            </div>
+          </div>
+
+          <!-- 3. Fibonacci Extension -->
+          <div class="calc-card">
+            <div class="calc-header">
+              <i class="fas fa-chart-line"></i>
+              <h3>Fibonacci Extension</h3>
+            </div>
+            <div class="calc-body">
+              <div class="input-group">
+                <label>Swing Low (Rs)</label>
+                <input
+                  type="number"
+                  id="fib-low"
+                  placeholder="400"
+                  step="0.01"
+                />
+              </div>
+              <div class="input-group">
+                <label>Swing High (Rs)</label>
+                <input
+                  type="number"
+                  id="fib-high"
+                  placeholder="500"
+                  step="0.01"
+                />
+              </div>
+              <div class="input-group">
+                <label>Retracement Point (Rs)</label>
+                <input
+                  type="number"
+                  id="fib-retrace"
+                  placeholder="450"
+                  step="0.01"
+                />
+              </div>
+              <button class="calc-btn" onclick="calculateFibonacci()">
+                <i class="fas fa-calculator"></i> Calculate
+              </button>
+              <div class="result-box" id="fib-result"></div>
+            </div>
+          </div>
+
+          <!-- 4. Multiple Target Levels -->
+          <div class="calc-card">
+            <div class="calc-header">
+              <i class="fas fa-layer-group"></i>
+              <h3>Multiple Target Levels</h3>
+            </div>
+            <div class="calc-body">
+              <div class="input-group">
+                <label>Entry Price (Rs)</label>
+                <input
+                  type="number"
+                  id="mt-entry"
+                  placeholder="500"
+                  step="0.01"
+                />
+              </div>
+              <div class="input-group">
+                <label>Stop Loss (Rs)</label>
+                <input
+                  type="number"
+                  id="mt-stop"
+                  placeholder="480"
+                  step="0.01"
+                />
+              </div>
+              <button class="calc-btn" onclick="calculateMultipleTargets()">
+                <i class="fas fa-calculator"></i> Calculate
+              </button>
+              <div class="result-box" id="mt-result"></div>
+            </div>
+          </div>
+
+          <!-- 5. Stop-Loss Optimizer -->
+          <div class="calc-card">
+            <div class="calc-header">
+              <i class="fas fa-shield-alt"></i>
+              <h3>Stop-Loss Optimizer</h3>
+            </div>
+            <div class="calc-body">
+              <div class="input-group">
+                <label>Entry Price (Rs)</label>
+                <input
+                  type="number"
+                  id="sl-entry"
+                  placeholder="500"
+                  step="0.01"
+                />
+              </div>
+              <div class="input-group">
+                <label>ATR Value (Optional)</label>
+                <input type="number" id="sl-atr" placeholder="15" step="0.01" />
+              </div>
+              <div class="input-group">
+                <label>Support Level (Optional)</label>
+                <input
+                  type="number"
+                  id="sl-support"
+                  placeholder="475"
+                  step="0.01"
+                />
+              </div>
+              <button class="calc-btn" onclick="calculateStopLoss()">
+                <i class="fas fa-calculator"></i> Calculate
+              </button>
+              <div class="result-box" id="sl-result"></div>
+            </div>
+          </div>
+
+          <!-- 6. Break-even Calculator -->
+          <div class="calc-card">
+            <div class="calc-header">
+              <i class="fas fa-equals"></i>
+              <h3>Break-even Calculator</h3>
+            </div>
+            <div class="calc-body">
+              <div class="input-group">
+                <label>Entry Price (Rs)</label>
+                <input
+                  type="number"
+                  id="be-entry"
+                  placeholder="500"
+                  step="0.01"
+                />
+              </div>
+              <div class="input-group">
+                <label>Quantity</label>
+                <input
+                  type="number"
+                  id="be-quantity"
+                  placeholder="100"
+                  step="1"
+                />
+              </div>
+              <div class="input-group">
+                <label>Commission (%)</label>
+                <input
+                  type="number"
+                  id="be-commission"
+                  placeholder="0.36"
+                  step="0.01"
+                  value="0.36"
+                />
+              </div>
+              <button class="calc-btn" onclick="calculateBreakeven()">
+                <i class="fas fa-calculator"></i> Calculate
+              </button>
+              <div class="result-box" id="be-result"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="../src/js/utils/cleanup-manager.js"></script>
+    <script src="../src/js/utils/error-handler.js"></script>
+    <script src="../src/js/services/api-service.js"></script>
+    <script defer src="../src/js/layout.js"></script>
+    <script defer src="../src/js/global.js"></script>
+    <script src="../src/js/calculators/target-calculator.js"></script>
+  </body>
+</html>

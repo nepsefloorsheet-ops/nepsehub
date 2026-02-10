@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Breakout Scanner | NEPSE Hub</title>
+    <link rel="shortcut icon" href="../img/favicon/NH.png" type="image/x-icon" />
+    <link rel="stylesheet" href="../src/css/global.css" />
+    <link rel="stylesheet" href="../src/css/market/momentum.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&family=Roboto+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="../src/js/auth-guard.js"></script>
+  </head>
+
+  <body>
+    <div id="layout"></div>
+    <main class="active">
+      <header class="header">
+        <div class="header-items">
+          <div class="header-group">
+            <div class="header-col">
+              <span class="header-col-label">NEPSE Index</span>
+              <div id="nepseData" class="flex gap-10 items-baseline">
+                <span class="index-value">--</span>
+                <div class="flex column">
+                  <span class="difference">--</span>
+                  <span class="percent-ch">(--)</span>
+                </div>
+              </div>
+            </div>
+            <div class="divider-v"></div>
+            <span class="pulse-dot" id="headerPulse"></span>
+            <div class="turnover-volume">
+              <div class="header-col">
+                <div class="header-col-item">
+                  <span class="header-col-label">Total Turnover</span>
+                  <span class="header-col-value turnover">--</span>
+                </div>
+                <div class="header-col-item">
+                  <span class="header-col-label">Total Volume</span>
+                  <span class="header-col-value volume">--</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="header-group">
+            <div class="header-col right">
+              <span
+                id="currentDate"
+                class="header-col-label"
+                style="font-size: 0.9rem"
+                >---, -- ---</span
+              >
+              <span
+                id="currentTime"
+                class="header-col-value"
+                style="font-size: 0.9rem"
+                >--:--:--</span
+              >
+            </div>
+            <div class="divider-v"></div>
+            <div class="header-col items-center">
+              <div class="flex items-center gap-8" style="margin-bottom: 2px">
+                <span id="market-status" class="market-pill">Checking...</span>
+              </div>
+              <div class="theme-switcher">
+                <button class="theme-btn" data-theme="dark" title="Dark Mode">
+                  <i class="fa-solid fa-moon"></i>
+                </button>
+                <button class="theme-btn" data-theme="light" title="Light Mode">
+                  <i class="fa-regular fa-sun"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <section>
+          <div class="section-header flex space-between items-end">
+            <div class="flex gap-15">
+              <div>
+                <h2>
+                  <i
+                    class="fa-solid fa-angles-up"
+                    style="color: var(--accent-success)"
+                  ></i>
+                  52-Week Breakout Scanner
+                  <button
+                    id="refresh-technical-btn"
+                    class="refresh-tool-btn"
+                    style="
+                      display: inline-flex;
+                      margin-left: 15px;
+                      vertical-align: middle;
+                    "
+                  >
+                    <i class="fas fa-sync-alt"></i> Refresh Data
+                  </button>
+                </h2>
+                <p class="subtitle">
+                  Real-time alerts for stocks hitting 1-Year Highs or Lows.
+                </p>
+              </div>
+              <div id="lastUpdated" class="last-updated">
+                <div class="info-tooltip-container">
+                  <div class="info-btn"><i class="fas fa-info"></i></div>
+                  <div class="tooltip-content">
+                    <b>Breakout Scanner</b>
+                    Monitors stocks trading near their 52-week Highs or Lows
+                    (within 2%) to identify breakout or breakdown opportunities.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="filter-pills flex gap-10">
+              <button class="pill active" data-filter="all">All Signals</button>
+              <button class="pill" data-filter="High">New Highs</button>
+              <button class="pill" data-filter="Near High">
+                Near Breakout
+              </button>
+              <button class="pill" data-filter="Low">New Lows</button>
+            </div>
+          </div>
+
+          <div id="alert-feed" class="flex gap-15 mb-40">
+            <!-- Breakout alerts injected here as list items -->
+          </div>
+
+          <div class="table-container">
+            <table class="professional-table">
+              <thead>
+                <tr>
+                  <th>Symbol</th>
+                  <th class="right">LTP</th>
+                  <th class="right">52W High</th>
+                  <th class="right">52W Low</th>
+                  <th class="middle">Status</th>
+                </tr>
+              </thead>
+              <tbody id="breakout-table-body">
+                <!-- Table rows -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script src="../src/js/utils/cleanup-manager.js?v=4"></script>
+    <script src="../src/js/utils/error-handler.js?v=4"></script>
+    <script src="../src/js/services/api-service.js?v=4"></script>
+    <script defer src="../src/js/layout.js?v=4"></script>
+    <script defer src="../src/js/global.js?v=4"></script>
+    <script defer src="../src/js/market/breakouts.js?v=4"></script>
+  </body>
+</html>
