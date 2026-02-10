@@ -1,0 +1,206 @@
+.depth-bar-container {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+  margin-top: 5px;
+  overflow: hidden;
+}
+
+.buy-bar {
+  height: 100%;
+  background: var(--accent-success);
+  transition: width 0.3s ease;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+}
+
+.sell-bar {
+  height: 100%;
+  background: var(--accent-danger);
+  transition: width 0.3s ease;
+  box-shadow: 0 0 8px rgba(244, 63, 94, 0.4);
+}
+
+.buy-header-box {
+  background: #0077d4; /* Matching the blue in the image */
+  color: white;
+  text-align: center;
+  padding: 10px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+.sell-header-box {
+  background: #e63946; /* Matching the red in the image */
+  color: white;
+  text-align: center;
+  padding: 10px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+.depth-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.depth-table th {
+  background: rgba(255, 255, 255, 0.02);
+  padding: 12px;
+  text-align: left;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
+  border-right: 1px solid var(--divider-color);
+}
+
+.depth-table td {
+  padding: 10px 12px;
+  font-family: "Roboto Mono", monospace;
+  font-size: 0.95rem;
+  border-bottom: 1px solid var(--divider-color);
+  border-right: 1px solid var(--divider-color);
+}
+
+.depth-table th:last-child,
+.depth-table td:last-child {
+  border-right: none;
+}
+
+.depth-table tfoot td {
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.03);
+  border-top: 1px solid var(--border-color);
+}
+
+.bg-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+}
+
+/* Custom tooltip-like styling for depth rows */
+.compact-table tbody tr:hover .depth-bar-container {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+#symbol-input:focus {
+  border-color: var(--accent-primary) !important;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.section-title-sm i {
+  margin-right: 8px;
+  color: var(--accent-primary);
+}
+
+.main-depth-flex {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-top: 16px;
+}
+
+.security-info-card-container {
+  width: 400px;
+  flex-shrink: 0;
+}
+
+/* Security Info Card Styles (Themed) */
+.security-info-card {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 12px;
+  font-family: "Inter", sans-serif;
+}
+
+.company-header {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+#info-company-name b {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.security-header {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+#info-security-name b {
+  color: var(--accent-primary);
+  font-weight: 700;
+}
+
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.info-table tr {
+  border-bottom: 1px solid var(--divider-color);
+}
+
+.info-table tr:last-child {
+  border-bottom: none;
+}
+
+.info-table .info-label {
+  padding: 10px 0;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  width: 50%;
+}
+
+.info-table .info-value {
+  padding: 10px 0;
+  text-align: right;
+  font-family: "Roboto Mono", monospace;
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+/* Row specific background coloring */
+#row-point.up,
+#row-percent-change.up {
+  background-color: rgba(16, 185, 129, 0.15);
+}
+
+#row-point.down,
+#row-percent-change.down {
+  background-color: rgba(244, 63, 94, 0.15);
+}
+
+#row-point.up .info-value,
+#row-point.up .info-label,
+#row-percent-change.up .info-value,
+#row-percent-change.up .info-label {
+  color: var(--accent-success) !important;
+}
+
+#row-point.down .info-value,
+#row-point.down .info-label,
+#row-percent-change.down .info-value,
+#row-percent-change.down .info-label {
+  color: var(--accent-danger) !important;
+}
+
+@media (max-width: 768px) {
+  .main-depth-flex {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .security-info-card-container {
+    width: 100%;
+    flex-shrink: 0;
+  }
+}

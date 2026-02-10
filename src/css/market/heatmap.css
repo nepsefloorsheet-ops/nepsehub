@@ -1,0 +1,209 @@
+/* Heatmap Dashboard Specific Styles */
+
+:root {
+  --heatmap-strong-pos: #10b981;
+  --heatmap-mild-pos: #065f46;
+  --heatmap-neutral: #475569;
+  --heatmap-mild-neg: #7f1d1d;
+  --heatmap-strong-neg: #ef4444;
+}
+
+[data-theme="light"] {
+  --heatmap-strong-pos: #10b981;
+  --heatmap-mild-pos: #a7f3d0;
+  --heatmap-neutral: #cbd5e1;
+  --heatmap-mild-neg: #fecaca;
+  --heatmap-strong-neg: #ef4444;
+}
+
+#heatmap-container-wrapper {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+  min-height: calc(100vh - 250px);
+  display: flex;
+  flex-direction: column;
+  margin-left: 12px;
+  margin-right: 12px;
+}
+
+#heatmap-container {
+  flex-grow: 1;
+  width: 100%;
+  min-height: 500px;
+  position: relative;
+  overflow: hidden;
+}
+
+.heatmap-controls {
+  margin-top: 20px;
+  padding: 0 5px;
+}
+
+/* Tabs Styling */
+.heatmap-tabs {
+  background: var(--secondary-bg);
+  padding: 5px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.tab-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+  background: var(--hover-bg);
+}
+
+.tab-btn.active {
+  background: var(--accent-primary);
+  color: white;
+}
+
+/* Select Styling */
+.premium-select {
+  background: var(--secondary-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 8px 12px;
+  border-radius: 6px;
+  outline: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  min-width: 180px;
+}
+
+.premium-select:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px var(--focus-ring);
+}
+
+/* Treemap Rects */
+.treemap-node {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.treemap-node:hover {
+  opacity: 0.9;
+  stroke: #fff;
+  stroke-width: 2px;
+}
+
+.treemap-node text {
+  fill: white;
+  font-size: 12px;
+  font-weight: 600;
+  pointer-events: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.symbol-text {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.change-text {
+  font-size: 10px;
+}
+
+/* Tooltip */
+.heatmap-tooltip {
+  position: absolute;
+  background: rgba(15, 23, 42, 0.9);
+  backdrop-filter: blur(8px);
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+  z-index: 2000;
+  box-shadow: var(--shadow-lg);
+  font-family: "Roboto Mono", monospace;
+  min-width: 200px;
+}
+
+[data-theme="light"] .heatmap-tooltip {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.tooltip-header {
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 4px;
+}
+
+.tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.tooltip-val {
+  font-weight: 600;
+}
+
+/* Legend */
+#heatmap-legend {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid var(--divider-color);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-color {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+
+.strong-pos {
+  background-color: var(--heatmap-strong-pos);
+}
+.mild-pos {
+  background-color: var(--heatmap-mild-pos);
+}
+.neutral {
+  background-color: var(--heatmap-neutral);
+}
+.mild-neg {
+  background-color: var(--heatmap-mild-neg);
+}
+.strong-neg {
+  background-color: var(--heatmap-strong-neg);
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .heatmap-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

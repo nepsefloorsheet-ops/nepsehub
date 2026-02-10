@@ -1,0 +1,177 @@
+/* Confluence Dashboard - Enhanced Layout */
+
+.leaderboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 25px;
+  margin-bottom: 40px;
+}
+
+.pro-card {
+  background: var(--card-bg);
+  background-image: radial-gradient(
+    at top right,
+    rgba(67, 97, 238, 0.1),
+    transparent
+  );
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 24px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.pro-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--accent-primary);
+  box-shadow: 0 12px 40px rgba(67, 97, 238, 0.2);
+}
+
+.pro-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--accent-primary);
+}
+
+.pro-card .rank {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.05);
+  line-height: 1;
+}
+
+.pro-card h4 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 15px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pro-card .score-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.score-visual {
+  width: 70px;
+  height: 70px;
+  position: relative;
+}
+
+/* Custom Progress Circle */
+.score-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.2);
+  border: 3px solid var(--border-color);
+}
+
+.score-circle .val {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--accent-success);
+}
+
+.score-circle .lbl {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Table Enhancements */
+.score-bar-container {
+  width: 100%;
+  max-width: 180px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  margin: 5px auto;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.score-bar-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 1s ease-out;
+}
+
+.breakdown-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.breakdown-pills span {
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+}
+
+.p-rsi {
+  color: #f72585;
+  border-color: rgba(247, 37, 133, 0.3) !important;
+}
+.p-ma {
+  color: #4361ee;
+  border-color: rgba(67, 97, 238, 0.3) !important;
+}
+.p-trend {
+  color: #4cc9f0;
+  border-color: rgba(76, 201, 240, 0.3) !important;
+}
+
+/* Status Labels */
+.trend-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.bullish {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--accent-success);
+}
+.bearish {
+  background: rgba(239, 64, 64, 0.1);
+  color: var(--accent-danger);
+}
+.neutral {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+}
+
+.u-hidden {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .scanner-controls {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,182 @@
+/* Candlestick AI Styles */
+
+.pattern-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 15px;
+}
+
+.legend {
+  display: flex;
+  gap: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.legend-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--accent-primary);
+}
+
+.count-badge {
+  background-color: var(--accent-secondary);
+  color: white;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+
+/* Patterns Grid */
+.patterns-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.pattern-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.pattern-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  border-color: var(--accent-primary);
+}
+
+.pattern-card.is-bullish {
+  border-left: 4px solid var(--accent-success);
+}
+
+.pattern-card.is-bearish {
+  border-left: 4px solid var(--accent-danger);
+}
+
+.pattern-card .symbol {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 5px;
+  display: block;
+}
+
+.pattern-name {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.is-bullish .pattern-name {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--accent-success);
+}
+.is-bearish .pattern-name {
+  background: rgba(239, 64, 64, 0.1);
+  color: var(--accent-danger);
+}
+
+.pattern-card .metrics {
+  display: flex;
+  justify-content: space-between;
+  font-family: "Roboto Mono", monospace;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.pattern-icon {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  font-size: 1.5rem;
+}
+
+.is-bullish .pattern-icon {
+  color: var(--accent-success);
+}
+.is-bearish .pattern-icon {
+  color: var(--accent-danger);
+}
+
+/* Controls */
+.scanner-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--card-bg);
+  padding: 15px 20px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  border: 1px solid var(--border-color);
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.select-input {
+  padding: 8px 12px;
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 6px;
+  outline: none;
+}
+
+.secondary-btn {
+  padding: 8px 16px;
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.u-hidden {
+  display: none !important;
+}
+.text-success {
+  color: var(--accent-success);
+}
+.text-danger {
+  color: var(--accent-danger);
+}
+
+@media (max-width: 768px) {
+  .pattern-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 600px) {
+  .scanner-controls {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+}

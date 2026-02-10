@@ -1,0 +1,225 @@
+<aside class="sidebar active">
+  <div class="sidebar-header">
+    <h2>
+      <a href="/" style="text-decoration: none; color: var(--text-primary)"
+        ><img
+          src="/img/logo.png"
+          alt="Logo"
+          width="150"
+          height="55"
+          background-color="transparent"
+      /></a>
+    </h2>
+    <button class="btn" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+  <ul class="items">
+    <li>
+      <a href="/"> <i class="fa-solid fa-house"></i> <span>Dashboard</span></a>
+    </li>
+    <li>
+      <a href="/sector-rotation"
+        ><i class="fas fa-arrows-spin"></i><span>Sector Rotation</span></a
+      >
+    </li>
+    <li>
+      <a href="/heatmap"><i class="fas fa-th"></i><span>Heatmap</span></a>
+    </li>
+    <li>
+      <a href="/live-market"
+        ><i class="fas fa-chart-line"></i><span>Live Market</span></a
+      >
+    </li>
+    <!-- <li>
+      <a href="/pages/features.html"><i class="fas fa-fire"></i><span>Features</span></a>
+    </li> -->
+    <li>
+      <a href="/market-depth"
+        ><i class="fas fa-layer-group"></i><span>Market Depth</span></a
+      >
+    </li>
+    <li>
+      <a href="/watchlist"
+        ><i class="fas fa-list-ul"></i><span>Watchlist</span></a
+      >
+    </li>
+    <li>
+      <a href="/portfolio"
+        ><i class="fas fa-briefcase"></i><span>Portfolio</span></a
+      >
+    </li>
+    <li class="dropdown">
+      <a href="javascript:void(0)" class="dropdown-toggle">
+        <i class="fas fa-user-tie"></i><span>Broker Analysis</span>
+        <i class="fas fa-chevron-down dropdown-icon"></i>
+      </a>
+      <ul class="dropdown-menu">
+        <li>
+          <a href="/broker-summary">
+            <i class="fas fa-file-contract"></i><span>Broker Summary</span>
+          </a>
+        </li>
+        <li>
+          <a href="/holdings-analytics">
+            <i class="fas fa-chart-line"></i><span>Broker Holdings</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class="dropdown">
+      <a href="javascript:void(0)" class="dropdown-toggle">
+        <i class="fas fa-microscope"></i><span>Technical Screener</span>
+        <i class="fas fa-chevron-down dropdown-icon"></i>
+      </a>
+      <ul class="dropdown-menu">
+        <li>
+          <a href="/rsi"> <i class="fas fa-chart-area"></i><span>RSI</span> </a>
+        </li>
+        <li>
+          <a href="/ma"
+            ><i class="fa-solid fa-chart-line"></i
+            ><span>Moving Average</span></a
+          >
+        </li>
+        <li>
+          <a href="/crossovers"
+            ><i class="fa-solid fa-arrows-turn-to-dots"></i
+            ><span>MA Crossovers</span></a
+          >
+        </li>
+        <li>
+          <a href="/confluence"
+            ><i class="fa-solid fa-wand-magic-sparkles"></i
+            ><span>Confluence Score</span></a
+          >
+        </li>
+        <li>
+          <a href="/candlesticks"
+            ><i class="fa-solid fa-fire-flame-curved"></i
+            ><span>Candlestick AI</span></a
+          >
+        </li>
+      </ul>
+    </li>
+    <li class="dropdown">
+      <a href="javascript:void(0)" class="dropdown-toggle">
+        <i class="fa-solid fa-bolt"></i><span>Momentum IQ</span>
+        <i class="fas fa-chevron-down dropdown-icon"></i>
+      </a>
+      <ul class="dropdown-menu">
+        <li>
+          <a href="/volume-shockers"
+            ><i class="fa-solid fa-volleyball"></i
+            ><span>Volume Shockers</span></a
+          >
+        </li>
+        <li>
+          <a href="/breakouts"
+            ><i class="fa-solid fa-angles-up"></i
+            ><span>Breakout Scanner</span></a
+          >
+        </li>
+      </ul>
+    </li>
+    <li class="dropdown">
+      <a href="javascript:void(0)" class="dropdown-toggle">
+        <i class="fa-solid fa-calculator"></i><span>Calculators</span>
+        <i class="fas fa-chevron-down dropdown-icon"></i>
+      </a>
+      <ul class="dropdown-menu">
+        <li>
+          <a href="/calculator"
+            ><i class="fa-solid fa-money-bill-trend-up"></i
+            ><span>Profit Simulator</span></a
+          >
+        </li>
+        <li>
+          <a href="/target-calculator"
+            ><i class="fa-solid fa-bullseye"></i
+            ><span>Target Calculator</span></a
+          >
+        </li>
+        <li>
+          <a href="/buy-units-calc"
+            ><i class="fa-solid fa-cart-shopping"></i
+            ><span>Buying Capacity</span></a
+          >
+        </li>
+      </ul>
+    </li>
+    <li>
+      <a href="/reviews">
+        <i class="fa-solid fa-star"></i> <span>Reviews</span></a
+      >
+    </li>
+  </ul>
+  <div
+    class="sidebar-divider"
+    style="
+      margin: 16px 0;
+      border-top: 1px solid var(--divider-color);
+      opacity: 0.3;
+    "
+  ></div>
+
+  <!-- Auth Section -->
+  <div id="sidebar-auth-section" class="sidebar-auth">
+    <!-- Logged Out State (Default) -->
+    <div id="auth-logged-out">
+      <li>
+        <a href="/login">
+          <i class="fas fa-sign-in-alt"></i><span>Log In</span>
+        </a>
+      </li>
+      <li>
+        <a href="/signup">
+          <i class="fas fa-user-plus"></i><span>Sign Up</span>
+        </a>
+      </li>
+    </div>
+
+    <!-- Logged In State (Hidden by default) -->
+    <div id="auth-logged-in" style="display: none">
+      <div
+        class="user-profile flex items-center flex-start gap-12 p-12 mb-8 bg-surface-bg rounded-12 border border-divider"
+      >
+        <div
+          class="user-avatar bg-accent-primary flex items-center rounded-full"
+          style="width: 32px; height: 32px; font-weight: 700; font-size: 0.8rem"
+        >
+          U
+        </div>
+        <div class="user-info overflow-hidden">
+          <div
+            id="user-display-name"
+            class="text-primary"
+            style="
+              font-size: 0.9rem;
+              font-weight: 600;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            "
+          >
+            User
+          </div>
+          <div class="text-secondary" style="font-size: 0.75rem; opacity: 0.7">
+            Trader
+          </div>
+        </div>
+      </div>
+      <li>
+        <a
+          href="javascript:void(0)"
+          id="sidebar-logout-btn"
+          class="text-danger"
+        >
+          <i class="fas fa-sign-out-alt"></i><span>Sign Out</span>
+        </a>
+      </li>
+    </div>
+  </div>
+</aside>
