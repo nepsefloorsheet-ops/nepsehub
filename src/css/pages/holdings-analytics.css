@@ -555,6 +555,17 @@
   }
 }
 
+@media (max-width: 1024px) {
+  .grid {
+    display: flex;
+    flex-direction: column;
+  }
+  #aggregated-summary-card,
+  #aggregated-bar-chart-card {
+    width: 100% !important;
+  }
+}
+
 @media (max-width: 768px) {
   .stats-grid {
     grid-template-columns: 1fr;
@@ -565,10 +576,17 @@
   .date-range-field,
   .search-action-field {
     grid-column: span 1;
+    max-width: 311px;
   }
   .quick-filters-row {
     flex-direction: column;
     align-items: flex-start;
+  }
+  .date-picker-group {
+    flex-direction: column;
+  }
+  .institutional-table {
+    font-size: 12px;
   }
 }
 
