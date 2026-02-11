@@ -39,6 +39,7 @@
     },
     { "source": "/reviews", "destination": "/pages/reviews.html" },
     { "source": "/login", "destination": "/pages/login.html" },
-    { "source": "/signup", "destination": "/pages/signup.html" }
+    { "source": "/signup", "destination": "/pages/signup.html" },
+    { "source": "/advance-ta", "destination": "/pages/advance-ta/index.html" }
   ]
 }
