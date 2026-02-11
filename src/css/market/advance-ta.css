@@ -1,0 +1,11 @@
+/* Advance TA Specific Styles */
+
+.advance-ta-container {
+  padding: 20px;
+}
+
+/* Override default main margin since there is no sidebar */
+main {
+  margin-left: 0 !important;
+  width: 100%;
+}
