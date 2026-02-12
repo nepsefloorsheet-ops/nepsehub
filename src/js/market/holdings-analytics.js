@@ -616,7 +616,7 @@ function renderAggregatedTable() {
         : valB.localeCompare(valA);
     }
     return state.ui.aggSortDirection === "asc" ? valA - valB : valB - valA;
-  });
+  }).slice(0, 15);
 
   if (sortedData.length === 0) {
     tbody.innerHTML = `<tr><td colspan="5" class="text-center py-20 text-muted">No aggregated data available.</td></tr>`;
