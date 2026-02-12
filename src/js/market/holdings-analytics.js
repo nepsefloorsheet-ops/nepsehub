@@ -591,11 +591,11 @@ function renderAggregatedTable() {
     title.textContent = `Broker-wise Holding for ${state.filters.symbol}`;
   } else if (isBrokerSearch) {
     header.textContent = "Symbol";
-    if (!header.innerHTML.includes('fa-sort')) header.innerHTML += ' <i class="fas fa-sort"></i>';
+    if (!header.innerHTML.includes('fa-sort')) header.innerHTML += ' ';
     title.textContent = `Portfolio for Broker ${state.filters.brokerId}`;
   } else {
     header.textContent = "Broker ID";
-    if (!header.innerHTML.includes('fa-sort')) header.innerHTML += ' <i class="fas fa-sort"></i>';
+    if (!header.innerHTML.includes('fa-sort')) header.innerHTML += ' ';
     title.textContent = "Global Broker-wise Distribution";
   }
 
