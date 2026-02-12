@@ -4,7 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Holdings Analytics | NEPSE Hub</title>
-    <link rel="shortcut icon" href="../img/favicon/NH.png" type="image/x-icon" />
+    <link
+      rel="shortcut icon"
+      href="../img/favicon/NH.png"
+      type="image/x-icon"
+    />
     <link rel="stylesheet" href="../src/css/global.css" />
     <link rel="stylesheet" href="../src/css/utils/status.css" />
     <link rel="stylesheet" href="../src/css/pages/holdings-analytics.css" />
@@ -205,7 +209,10 @@
 
         <!-- Aggregated Summary Table (Instant View) + Bar Chart -->
         <div class="flex space-between gap-24 mb-24 grid">
-          <div class="analyst-card table-card flex-1" id="aggregated-summary-card">
+          <div
+            class="analyst-card table-card flex-1"
+            id="aggregated-summary-card"
+          >
             <div class="card-header-clean">
               <div class="flex items-center gap-16">
                 <i class="fas fa-layer-group text-accent-secondary"></i>
@@ -216,25 +223,11 @@
               <table class="institutional-table" id="aggregated-master-table">
                 <thead>
                   <tr>
-                    <th
-                      id="agg-entity-header"
-                      class="sortable"
-                      data-sort="entity_id"
-                    >
-                      Entity <i class="fas fa-sort"></i>
-                    </th>
-                    <th class="text-right sortable" data-sort="total_qty">
-                      Total Qty <i class="fas fa-sort"></i>
-                    </th>
-                    <th class="text-right sortable" data-sort="total_amount">
-                      Total Amount <i class="fas fa-sort"></i>
-                    </th>
-                    <th class="text-right sortable" data-sort="avg_rate">
-                      Avg. Rate <i class="fas fa-sort"></i>
-                    </th>
-                    <th class="text-right sortable" data-sort="record_count">
-                      Hits <i class="fas fa-sort"></i>
-                    </th>
+                    <th id="agg-entity-header">Symbol</th>
+                    <th class="text-right">Total Qty</th>
+                    <th class="text-right">Total Amount</th>
+                    <th class="text-right">Avg. Rate</th>
+                    <th class="text-right">Hits</th>
                   </tr>
                 </thead>
                 <tbody id="aggregated-tbody">
@@ -244,21 +237,39 @@
             </div>
           </div>
 
-          <div class="analyst-card chart-card" id="aggregated-bar-chart-card" style="width:49%;">
+          <div
+            class="analyst-card chart-card"
+            id="aggregated-bar-chart-card"
+            style="width: 49%"
+          >
             <div class="card-header-clean">
               <div class="flex items-center gap-16">
                 <i class="fas fa-chart-bar text-accent-primary"></i>
                 <h3>Holdings by Entity</h3>
               </div>
-              <div class="chart-controls" style="margin-left:auto">
+              <div class="chart-controls" style="margin-left: auto">
                 <nav class="flex" role="tablist" aria-label="Chart metric">
-                  <button class="chart-toggle btn-terminal primary active" data-metric="total_qty">Qty</button>
-                  <button class="chart-toggle btn-terminal secondary" data-metric="total_amount">Amount</button>
+                  <button
+                    class="chart-toggle btn-terminal primary active"
+                    data-metric="total_qty"
+                  >
+                    Qty
+                  </button>
+                  <button
+                    class="chart-toggle btn-terminal secondary"
+                    data-metric="total_amount"
+                  >
+                    Amount
+                  </button>
                 </nav>
               </div>
             </div>
-            <div class="chart-wrap" style="padding:16px;">
-              <canvas id="aggregated-bar-chart" width="400" height="500"></canvas>
+            <div class="chart-wrap" style="padding: 16px">
+              <canvas
+                id="aggregated-bar-chart"
+                width="400"
+                height="500"
+              ></canvas>
             </div>
           </div>
         </div>
