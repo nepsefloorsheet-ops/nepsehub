@@ -234,7 +234,7 @@
   right: 0;
   width: 400px;
   height: 100vh;
-  background: var(--sidebar-bg);
+  background: var(--surface-bg);
   z-index: 2000;
   box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
