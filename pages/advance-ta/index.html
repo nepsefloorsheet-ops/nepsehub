@@ -9,8 +9,7 @@
       href="../../img/favicon/NH.png"
       type="image/x-icon"
     />
-    <link rel="stylesheet" href="../../src/css/global.css" />
-    <link rel="stylesheet" href="../../src/css/market/advance-ta.css" />
+    <link rel="stylesheet" href="../../src/css/advance-ta/advance-ta.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -21,62 +20,136 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
     <script src="../../src/js/auth-guard.js"></script>
   </head>
 
   <body>
+    <header class="header">
+      <div class="header-container">
+        <div class="logo-section">
+          <img
+            src="../../img/logo.png"
+            width="40"
+            height="40"
+            alt="NEPSE Hub"
+            class="logo-icon"
+          />
+          <div class="header-titles">
+            <span class="logo-text">Advance Technical Analysis</span>
+            <span class="subtitle">Tools for in-depth technical analysis</span>
+          </div>
+        </div>
+
+        <div class="theme-switcher">
+          <button class="theme-btn" data-theme="light" title="Light Mode">
+            <i class="fa-regular fa-sun"></i>
+          </button>
+          <button class="theme-btn" data-theme="dark" title="Dark Mode">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
     <main>
       <div class="content">
         <section>
-          <div class="tool-header">
-            <div class="tool-title-section">
-              <h2>
-                <i
-                  class="fas fa-chart-bar"
-                  style="color: var(--accent-primary)"
-                ></i>
-                Advance Technical Analysis
-              </h2>
-              <p class="subtitle">
-                Advanced tools for in-depth technical analysis.
-              </p>
-            </div>
-            <div class="header-actions">
-              <button id="refresh-btn" class="refresh-tool-btn">
-                <i class="fas fa-sync-alt"></i> Refresh Data
-              </button>
-            </div>
-          </div>
-
           <div class="scanner-controls">
-            <!-- Controls will go here -->
-            <div
-              id="controls-placeholder"
-              style="
-                padding: 20px;
-                text-align: center;
-                color: var(--text-muted);
-              "
-            >
-              Controls coming soon...
+            <div class="filter-row">
+              <div class="filter-group">
+                <label for="sectorSelect">Sector</label>
+                <select id="sectorSelect" class="filter-dropdown">
+                  <option value="">All Sectors</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label for="symbolSelect">Symbol (Name)</label>
+                <select id="symbolSelect" class="filter-dropdown">
+                  <option value="">Select Symbol</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label for="symbolDisplay">Symbol Only</label>
+                <input
+                  type="text"
+                  id="symbolDisplay"
+                  class="filter-input"
+                  placeholder="Auto-filled"
+                  readonly
+                />
+              </div>
+
+              <div class="filter-actions">
+                <button id="searchBtn" class="search-btn">
+                  <i class="fas fa-search"></i> Search
+                </button>
+                <button id="resetFilters" class="reset-btn">
+                  <i class="fas fa-undo"></i> Reset
+                </button>
+              </div>
             </div>
           </div>
 
-          <div class="table-container" id="tableContainer">
-            <!-- Table content will go here -->
-            <div
-              id="content-placeholder"
-              style="
-                padding: 40px;
-                text-align: center;
-                color: var(--text-muted);
-              "
-            >
-              <i
-                class="fas fa-tools"
-                style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5"
-              ></i>
-              <p>Advance TA content is under construction.</p>
+          <div class="chart-main-container" id="chartMainContainer">
+            <!-- Chart Content Area -->
+            <div class="chart-content">
+              <!-- Top Toolbar -->
+              <div class="chart-controls">
+                <div class="control-group timeframes">
+                  <button class="control-btn active" data-tf="1M">1M</button>
+                  <button class="control-btn" data-tf="1Y">1Y</button>
+                  <button class="control-btn" data-tf="ALL">ALL</button>
+                </div>
+                <div class="control-divider"></div>
+                <div class="control-group chart-types">
+                  <button class="control-btn active" title="Line Chart">
+                    <i class="fas fa-chart-line"></i>
+                  </button>
+                </div>
+                <div class="control-divider"></div>
+                <div class="control-group indicators">
+                  <button class="control-btn" id="compareBtn">
+                    <i class="fas fa-arrows-left-right"></i> Compare
+                  </button>
+                  <button class="control-btn" id="indicatorsBtn">
+                    <i class="fas fa-plus"></i> Indicators
+                  </button>
+                </div>
+                <div class="control-spacer"></div>
+                <div class="control-group actions">
+                  <button
+                    class="control-btn"
+                    id="screenshotBtn"
+                    title="Screenshot"
+                  >
+                    <i class="fas fa-camera"></i>
+                  </button>
+                  <button
+                    class="control-btn"
+                    id="fullscreenBtn"
+                    title="Fullscreen"
+                  >
+                    <i class="fas fa-expand"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Main Canvas Area -->
+              <div class="chart-canvas-area" id="chartCanvasArea">
+                <div id="tv-chart-container" class="trading-view-container">
+                  <canvas id="priceChart"></canvas>
+                  <!-- Chart will be initialized here -->
+                  <div class="chart-placeholder">
+                    <i class="fas fa-chart-line"></i>
+                    <p>Select a symbol to load chart data</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -85,11 +158,28 @@
 
     <div id="error-container" class="toast-container"></div>
 
+    <!-- Under Construction Modal -->
+    <div id="constructionModal" class="modal-overlay">
+      <div class="modal-card">
+        <div class="modal-content">
+          <div class="construction-icon">
+            <i class="fas fa-tools"></i>
+          </div>
+          <h3>Under Construction</h3>
+          <p>
+            The <strong>Indicators</strong> feature is currently being developed
+            to provide you with institutional-grade technical signals.
+          </p>
+          <p class="coming-soon">Stay tuned for the update!</p>
+          <button id="closeModal" class="modal-close-btn">Close</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Note the updated paths for these scripts as we are one level deeper -->
     <script src="../../src/js/utils/cleanup-manager.js?v=2"></script>
     <script src="../../src/js/utils/error-handler.js?v=2"></script>
     <script src="../../src/js/services/api-service.js?v=2"></script>
-    <script defer src="../../src/js/global.js?v=2"></script>
-    <script defer src="../../src/js/market/advance-ta.js?v=2"></script>
+    <script defer src="../../src/js/advance-ta/advance-ta.js"></script>
   </body>
 </html>
