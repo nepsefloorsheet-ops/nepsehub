@@ -42,6 +42,7 @@
     { "source": "/signup", "destination": "/pages/signup.html" },
     { "source": "/advance-ta", "destination": "/pages/advance-ta/index.html" },
     { "source": "/resources", "destination": "/pages/resources.html" },
+    { "source": "/src/:match*", "destination": "/src/:match*" },
     { "source": "/nepse-hub-v1.0-features", "destination": "/pages/nepse-hub-features.html" }
   ]
 }
