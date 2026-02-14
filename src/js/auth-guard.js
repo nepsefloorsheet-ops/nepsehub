@@ -7,8 +7,9 @@
     const STORAGE_KEY = 'supabase.auth.token'; // Standard Supabase storage key
     
     // Quick check: Does a session exist in LocalStorage?
-    const session = localStorage.getItem('sb-ywdajuhuvwhcefnssngi-auth-token') || 
-                    localStorage.getItem('sb-ywdaixuumhbuecfsgsni-auth-token'); 
+    // Quick check: Does a session exist in LocalStorage?
+    // We now use 'sb-access-token' set by auth-service.js
+    const session = localStorage.getItem('sb-access-token'); 
 
     // List of pages that are PUBLIC (anyone can see)
     const publicPages = ['login.html', 'signup.html', 'index.html', 'features.html'];

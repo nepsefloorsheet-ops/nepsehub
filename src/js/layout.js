@@ -139,21 +139,49 @@ fetch(basePath + "src/layout.html")
         const userAvatar = document.querySelector('.user-avatar');
 
         async function initSidebarAuth() {
-            const sessionStr = localStorage.getItem('sb-ywdaixuumhbuecfsgsni-auth-token');
-            if (sessionStr) {
+            const token = localStorage.getItem('sb-access-token');
+            const userStr = localStorage.getItem('sb-user');
+            
+            const authLoggedOut = document.getElementById('auth-logged-out');
+            const authLoggedIn = document.getElementById('auth-logged-in');
+            const logoutBtn = document.getElementById('sidebar-logout-btn');
+            
+            if (token && userStr) {
                 try {
-                    const session = JSON.parse(sessionStr);
-                    const user = session.user;
+                    const user = JSON.parse(userStr);
                     if (user) {
                         if (authLoggedOut) authLoggedOut.style.display = 'none';
                         if (authLoggedIn) authLoggedIn.style.display = 'block';
-                        const fullName = user.user_metadata?.full_name || user.email.split('@')[0];
+                        
+                        // Display Name
+                        const fullName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
                         if (userDisplayName) userDisplayName.textContent = fullName;
-                        if (userAvatar) userAvatar.textContent = fullName.charAt(0).toUpperCase();
+                        
+                        // Avatar
+                        const initials = fullName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                        if (userAvatar) userAvatar.textContent = initials;
+                        
+                        // Helper: Logout
+                        if (logoutBtn) {
+                            logoutBtn.onclick = async () => {
+                                if (window.authService) {
+                                    await window.authService.logout();
+                                } else {
+                                    // Fallback if authService not ready
+                                    localStorage.removeItem('sb-access-token');
+                                    localStorage.removeItem('sb-refresh-token');
+                                    localStorage.removeItem('sb-user');
+                                    window.location.href = 'pages/login.html';
+                                }
+                            };
+                        }
                     }
                 } catch (e) {
                     console.error("Auth: Error parsing sidebar session", e);
                 }
+            } else {
+                 if (authLoggedOut) authLoggedOut.style.display = 'block';
+                 if (authLoggedIn) authLoggedIn.style.display = 'none';
             }
         }
         initSidebarAuth();
