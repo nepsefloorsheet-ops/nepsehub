@@ -467,15 +467,24 @@ async function loadState() {
         // Safety: Ensure targets object exists for legacy users
         if (!portfolioState.targets) portfolioState.targets = {};
 
-        if (window.supabaseClient) {
-            const { data: { session } } = await window.supabaseClient.auth.getSession();
-            if (session?.user) {
-                const { data } = await window.supabaseClient.from('user_settings').select('portfolio_data').eq('user_id', session.user.id).single();
-                if (data?.portfolio_data) {
-                    portfolioState = data.portfolio_data;
-                    if (!portfolioState.targets) portfolioState.targets = {};
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(portfolioState));
+        const token = localStorage.getItem('sb-access-token');
+        const API_URL = window.appConfig?.api?.baseUrl || '';
+
+        if (token) {
+            try {
+                const res = await fetch(`${API_URL}/api/portfolio`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data?.portfolio_data) {
+                        portfolioState = data.portfolio_data;
+                        if (!portfolioState.targets) portfolioState.targets = {};
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(portfolioState));
+                    }
                 }
+            } catch (err) {
+                console.warn("Portfolio: Backend fetch error", err);
             }
         }
         calculateHoldings();
@@ -489,15 +498,18 @@ async function saveState() {
         portfolioState.lastUpdate = new Date().toISOString();
         localStorage.setItem(STORAGE_KEY, JSON.stringify(portfolioState));
         
-        if (window.supabaseClient) {
-            const { data: { session } } = await window.supabaseClient.auth.getSession();
-            if (session?.user) {
-                await window.supabaseClient.from('user_settings').upsert({
-                    user_id: session.user.id,
-                    portfolio_data: portfolioState,
-                    updated_at: new Date().toISOString()
-                }, { onConflict: 'user_id' });
-            }
+        const token = localStorage.getItem('sb-access-token');
+        const API_URL = window.appConfig?.api?.baseUrl || '';
+
+        if (token) {
+            fetch(`${API_URL}/api/portfolio`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(portfolioState)
+            }).catch(e => console.error("Portfolio: Backend save error", e));
         }
     } catch (e) {
         console.error("Portfolio: Save Error", e);

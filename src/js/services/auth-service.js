@@ -1,25 +1,10 @@
 /**
  * auth-service.js
- * Handles user authentication via Supabase
+ * Handles user authentication via Backend API (Proxy to Supabase)
  */
 
-// --- CONFIGURATION ---
-// IMPORTANT: Replace these with your actual Supabase credentials
-const SUPABASE_URL = 'https://ywdaixuumhbuecfsgsni.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3ZGFpeHV1bWhidWVjZnNnc25pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxOTA4OTksImV4cCI6MjA4NTc2Njg5OX0.gVHa17vlDlvQ8Wz8hXf1Ctgcx2LZOUxC9EG52vreG5U';
-
-// Initialize Supabase client with verification
-let supabaseClient = null;
-try {
-    if (window.supabase) {
-        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        window.supabaseClient = supabaseClient; // Make it globally accessible
-    } else {
-        console.error("Auth: Supabase library not found on window. Check script tags in your HTML.");
-    }
-} catch (e) {
-    console.error("Auth: Failed to initialize Supabase. Check your URL and Key consistency.", e);
-}
+// API Base URL
+const API_BASE = `${window.appConfig.api.baseUrl}/api/auth`;
 
 // DOM Elements
 const loginForm = document.getElementById('login-form');
@@ -33,11 +18,6 @@ async function handleSignup(e) {
     e.preventDefault();
     console.log("Auth: Signup attempt started...");
 
-    if (!supabaseClient) {
-        showMessage(signupForm, "Authentication error: Connection to Supabase failed. Check your API settings.", "error");
-        return;
-    }
-
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
@@ -46,15 +26,15 @@ async function handleSignup(e) {
     try {
         setLoading(submitBtn, true);
         
-        const { data, error } = await supabaseClient.auth.signUp({
-            email,
-            password,
-            options: {
-                data: { full_name: name }
-            }
+        const response = await fetch(`${API_BASE}/signup`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, full_name: name })
         });
 
-        if (error) throw error;
+        const data = await response.json();
+
+        if (!response.ok) throw new Error(data.detail || 'Signup failed');
 
         showMessage(signupForm, 'Registration successful! Please check your email for confirmation.', 'success');
         
@@ -70,24 +50,31 @@ async function handleSignup(e) {
  */
 async function handleLogin(e) {
     e.preventDefault();
-    if (!supabaseClient) return alert("Supabase not initialized. Check your credentials.");
 
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    const remember = document.getElementById('remember')?.checked;
     const submitBtn = loginForm.querySelector('button[type="submit"]');
 
     try {
         setLoading(submitBtn, true);
 
-        const { data, error } = await supabaseClient.auth.signInWithPassword({
-            email,
-            password
+        const response = await fetch(`${API_BASE}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
         });
 
-        if (error) throw error;
+        const data = await response.json();
 
-        // Save session locally if needed (Supabase handles this automatically in LocalStorage)
+        if (!response.ok) throw new Error(data.detail || 'Login failed');
+
+        // Store Session Token
+        if (data.session) {
+            localStorage.setItem('sb-access-token', data.session.access_token);
+            localStorage.setItem('sb-refresh-token', data.session.refresh_token);
+            localStorage.setItem('sb-user', JSON.stringify(data.user));
+        }
+
         console.log("Login successful:", data.user);
         
         // Redirect to dashboard
@@ -104,7 +91,6 @@ async function handleLogin(e) {
  * Helper: Show Feedback Message
  */
 function showMessage(form, text, type) {
-    // Remove existing messages
     const existing = form.querySelector('.auth-message');
     if (existing) existing.remove();
 
@@ -132,17 +118,16 @@ function setLoading(btn, isLoading) {
  * Helper: Logout
  */
 async function logout() {
-    if (!supabaseClient) {
-        // Fallback for missing client
-        localStorage.clear(); 
+    try {
+        await fetch(`${API_BASE}/logout`, { method: 'POST' });
+    } catch (e) {
+        console.warn("Logout error", e);
+    } finally {
+        localStorage.removeItem('sb-access-token');
+        localStorage.removeItem('sb-refresh-token');
+        localStorage.removeItem('sb-user');
         window.location.href = window.location.origin + '/pages/login.html';
-        return;
     }
-    const { error } = await supabaseClient.auth.signOut();
-    
-    // Use origin to ensure we go to the correct absolute path
-    const loginPath = window.location.origin + '/pages/login.html';
-    window.location.href = loginPath;
 }
 
 // Event Listeners
@@ -166,9 +151,15 @@ if (togglePasswordBtn) {
 
 // Check session on dashboard pages
 async function checkAuthStatus() {
-    if (!supabaseClient) return;
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    return session;
+    const token = localStorage.getItem('sb-access-token');
+    const userStr = localStorage.getItem('sb-user');
+    
+    if (!token || !userStr) return null;
+    
+    return { 
+        access_token: token, 
+        user: JSON.parse(userStr) 
+    };
 }
 
 // Expose to window

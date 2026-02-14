@@ -97,21 +97,24 @@ async function saveState() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(watchlistState));
         console.log("Watchlist: State saved to disk.");
 
-        // Save to Supabase Cloud if logged in
-        if (window.supabaseClient) {
-            const { data: { session } } = await window.supabaseClient.auth.getSession();
-            if (session?.user) {
-                const { error } = await window.supabaseClient
-                    .from('user_settings')
-                    .upsert({ 
-                        user_id: session.user.id,
-                        watchlist_data: watchlistState,
-                        updated_at: new Date().toISOString()
-                    }, { onConflict: 'user_id' });
-                
-                if (error) console.warn("Watchlist: Cloud save failed", error);
-                else console.log("Watchlist: Cloud sync successful.");
-            }
+        // Save to Supabase Cloud via Backend
+        const token = localStorage.getItem('sb-access-token');
+        const API_URL = window.appConfig?.api?.baseUrl || '';
+        
+        if (token) {
+            fetch(`${API_URL}/api/watchlist`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(watchlistState)
+            })
+            .then(res => {
+                if (res.ok) console.log("Watchlist: Cloud sync successful.");
+                else console.warn("Watchlist: Cloud save failed", res.status);
+            })
+            .catch(e => console.error("Watchlist: Backend save error", e));
         }
     } catch (e) {
         console.error("Watchlist: Failed to save state", e);
@@ -132,23 +135,28 @@ async function loadState() {
         }
 
         // 2. If logged in, fetch latest from Cloud
-        if (window.supabaseClient) {
-            const { data: { session } } = await window.supabaseClient.auth.getSession();
-            if (session?.user) {
-                console.log("Watchlist: Fetching cloud data...");
-                const { data, error } = await window.supabaseClient
-                    .from('user_settings')
-                    .select('watchlist_data')
-                    .eq('user_id', session.user.id)
-                    .single();
+        const token = localStorage.getItem('sb-access-token');
+        const API_URL = window.appConfig?.api?.baseUrl || '';
+
+        if (token) {
+            console.log("Watchlist: Fetching cloud data...");
+            try {
+                const res = await fetch(`${API_URL}/api/watchlist`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
                 
-                if (data && data.watchlist_data) {
-                    console.log("Watchlist: Cloud data found, updating local state.");
-                    applyParsedState(data.watchlist_data);
-                    // Update LocalStorage with fresh cloud data
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(watchlistState));
-                    refreshUI();
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.watchlist_data) {
+                        console.log("Watchlist: Cloud data found, updating local state.");
+                        applyParsedState(data.watchlist_data);
+                        // Update LocalStorage with fresh cloud data
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(watchlistState));
+                        refreshUI();
+                    }
                 }
+            } catch (err) {
+                console.warn("Watchlist: Backend fetch error", err);
             }
         }
 
