@@ -26,11 +26,11 @@
 
 [data-theme="dark"] {
   /* Dark Theme Variables */
-  --primary-bg: #0a0c12;
-  --secondary-bg: #12141c;
-  --tertiary-bg: #161a23;
-  --card-bg: #161a23;
-  --surface-bg: #1f2430;
+  --primary-bg: #181b25;
+  --secondary-bg: #181b25;
+  --tertiary-bg: #181b25;
+  --card-bg: #181b25;
+  --surface-bg: #181b25;
 
   --accent-primary: #6366f1;
   --accent-primary-rgb: 99, 102, 241;
@@ -144,17 +144,42 @@ main {
   flex-direction: column;
 }
 
-.logo-text {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  line-height: 1.2;
+.header-right {
+  display: flex;
+  gap: 16px;
+}
+/* Market Turnover & Volume Styles */
+.turnover-volume {
+  flex: 1;
 }
 
-.subtitle {
-  color: var(--text-muted);
+.header-col {
+  background: var(--tertiary-bg);
+  padding: 6px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+}
+
+.header-col-item {
+  display: flex;
+  gap: 6px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-col-label {
   font-size: 0.75rem;
-  margin-top: 0;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.header-col-value {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  font-family: "Inter", sans-serif;
 }
 
 /* Theme Switcher Styles */
@@ -518,4 +543,108 @@ main {
 .modal-close-btn:hover {
   transform: scale(1.05);
   opacity: 0.9;
+}
+
+/* Indicators Modal Enhancements */
+.modal-header {
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.modal-header h3 {
+  font-size: 1.25rem;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modal-header h3 i {
+  color: var(--accent-primary);
+}
+
+.indicators-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+  margin-bottom: 24px;
+}
+
+.indicator-item {
+  padding: 16px;
+  background: var(--tertiary-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.indicator-item:hover {
+  border-color: var(--accent-primary);
+  background: var(--surface-bg);
+}
+
+.indicator-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-left: 32px;
+}
+
+/* Custom Checkbox */
+.custom-checkbox {
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  gap: 12px;
+}
+
+.custom-checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  height: 20px;
+  width: 20px;
+  background-color: var(--surface-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  display: block;
+  transition: all 0.2s;
+}
+
+.custom-checkbox:hover input ~ .checkmark {
+  border-color: var(--accent-primary);
+}
+
+.custom-checkbox input:checked ~ .checkmark {
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 7px;
+  top: 3px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.custom-checkbox input:checked ~ .checkmark:after {
+  display: block;
 }
