@@ -1,6 +1,7 @@
 // Chart instance
 let chartInstance = null;
 let currentTimePeriod = '1D';
+let currentSymbol = 'NEPSE';
 const REFRESH_INTERVAL = 30000; // 30 seconds
 let refreshTimer = null;
 
@@ -9,6 +10,7 @@ let refreshTimer = null;
 const chartCanvas = document.getElementById('marketChart');
 const chartPlaceholder = document.getElementById('chartPlaceholder');
 const timeButtons = document.querySelectorAll('.time-btn');
+const sectorDropdown = document.getElementById('sectorDropdown');
 
 // Check if time is between 11:00 AM and 3:00 PM (11:00-15:00 in 24hr format)
 function isTradingHours(timestamp) {
@@ -112,7 +114,7 @@ function showLoading() {
     chartPlaceholder.innerHTML = `
         <div class="loading">
             <div class="spinner"></div>
-            <p>Loading ${currentTimePeriod} chart data...</p>
+            <p>Loading ${currentSymbol} ${currentTimePeriod} chart data...</p>
         </div>
     `;
     chartPlaceholder.style.display = 'flex';
@@ -162,7 +164,7 @@ function createChart(chartData) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'NEPSE Index',
+                label: `${currentSymbol} Index`,
                 data: prices,
                 borderColor: lineColor,
                 backgroundColor: gradient,
@@ -250,15 +252,16 @@ function createChart(chartData) {
 }
 
 // Load chart data
-async function loadChartData(timePeriod, isRefresh = false) {
+async function loadChartData(symbol, timePeriod, isRefresh = false) {
   try {
     if (!isRefresh) {
       showLoading();
       timeButtons.forEach(btn => btn.disabled = true);
+      if (sectorDropdown) sectorDropdown.disabled = true;
     }
 
 
-    const apiData = await apiService.getChartData(timePeriod);
+    const apiData = await apiService.getChartData(symbol, timePeriod);
     const chartData = processChartData(apiData, timePeriod);
     
     if (!chartData || chartData.length === 0) {
@@ -271,9 +274,9 @@ async function loadChartData(timePeriod, isRefresh = false) {
     console.error('Error loading chart:', error);
     
     ErrorHandler.showError(chartPlaceholder, 
-      `Failed to load ${timePeriod} chart: ${error.message}`,
+      `Failed to load ${symbol} ${timePeriod} chart: ${error.message}`,
       () => {
-        loadChartData(timePeriod);
+        loadChartData(symbol, timePeriod);
       }
     );
     
@@ -283,29 +286,30 @@ async function loadChartData(timePeriod, isRefresh = false) {
         btn.classList.toggle('active', btn.dataset.time === timePeriod);
         btn.disabled = false;
       });
+      if (sectorDropdown) sectorDropdown.disabled = false;
     }
     
-    // Always update current time period
+    // Always update current state
     currentTimePeriod = timePeriod;
+    currentSymbol = symbol;
     
     // Start/Restart auto-refresh
-    startAutoRefresh(timePeriod);
+    startAutoRefresh(symbol, timePeriod);
   }
 }
 
 // Start auto-refresh timer
-function startAutoRefresh(timePeriod) {
+function startAutoRefresh(symbol, timePeriod) {
     // Clear existing timer
     if (refreshTimer) {
         clearInterval(refreshTimer);
     }
 
     // Only auto-refresh for 1D chart during market hours or as per user request
-    // For now, let's keep it simple and refresh if it's 1D
     if (timePeriod === '1D') {
         refreshTimer = setInterval(() => {
-            console.log(`Auto-refreshing ${timePeriod} chart...`);
-            loadChartData(timePeriod, true);
+            console.log(`Auto-refreshing ${symbol} ${timePeriod} chart...`);
+            loadChartData(symbol, timePeriod, true);
         }, REFRESH_INTERVAL);
     }
 }
@@ -318,12 +322,22 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', () => {
             const timePeriod = button.dataset.time;
             if (timePeriod !== currentTimePeriod) {
-                loadChartData(timePeriod);
+                loadChartData(currentSymbol, timePeriod);
             }
         });
     });
 
+    // Setup sector dropdown event
+    if (sectorDropdown) {
+        sectorDropdown.addEventListener('change', (e) => {
+            const symbol = e.target.value;
+            if (symbol !== currentSymbol) {
+                loadChartData(symbol, currentTimePeriod);
+            }
+        });
+    }
 
-    // Load initial data (1D)
-    loadChartData('1D');
+
+    // Load initial data (NEPSE, 1D)
+    loadChartData(currentSymbol, '1D');
 });
