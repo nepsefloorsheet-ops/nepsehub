@@ -204,3 +204,54 @@ canvas {
     max-height: 425px !important;
   }
 }
+
+/* Sector Dropdown Styles */
+.sector-dropdown {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  min-width: 140px;
+  font-family: "Outfit", sans-serif;
+}
+
+.sector-dropdown:hover {
+  border-color: var(--accent-primary);
+  background: var(--bg-secondary);
+}
+
+.sector-dropdown:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.sector-dropdown option {
+  background: var(--secondary-bg);
+  color: var(--text-primary);
+  padding: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.chart-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .chart-header-left {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
