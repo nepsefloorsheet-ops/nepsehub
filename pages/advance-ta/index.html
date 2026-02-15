@@ -23,7 +23,58 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.3.1/dist/chartjs-adapter-luxon.umd.min.js"></script>
+    <!-- Using a known working version of the financial plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial"></script>
     <script src="../../src/js/auth-guard.js"></script>
+    <script>
+      // Wait for all scripts to load, then register financial components
+      window.addEventListener("load", () => {
+        console.log("=== FINANCIAL PLUGIN DEBUG ===");
+        console.log(
+          "Window exports:",
+          Object.keys(window).filter(
+            (k) =>
+              k.includes("Chart") ||
+              k.includes("Financial") ||
+              k.includes("Candlestick"),
+          ),
+        );
+
+        // Try to register financial components if they exist
+        if (typeof Chart !== "undefined") {
+          console.log("Chart.js loaded");
+          console.log(
+            "Available Chart.controllers:",
+            Object.keys(Chart.controllers || {}),
+          );
+
+          // Check if financial plugin loaded
+          if (window.CandlestickController && window.CandlestickElement) {
+            console.log(
+              "Registering CandlestickController and CandlestickElement",
+            );
+            Chart.register(
+              window.CandlestickController,
+              window.CandlestickElement,
+            );
+          } else if (Chart.controllers.candlestick) {
+            console.log("Candlestick controller already registered");
+          } else {
+            console.warn(
+              "Financial plugin components not found in window scope",
+            );
+          }
+
+          console.log(
+            "Final Chart.controllers:",
+            Object.keys(Chart.controllers || {}),
+          );
+        }
+      });
+    </script>
   </head>
 
   <body>
@@ -31,7 +82,7 @@
       <div class="header-container">
         <div class="logo-section">
           <img
-            src="logo.png"
+            src="../../img/logo.png"
             width="40"
             height="40"
             alt="NEPSE Hub"
