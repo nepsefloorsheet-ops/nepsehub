@@ -103,7 +103,28 @@
           <div class="w-50">
             <div class="chart-container h-100">
               <div class="chart-header flex space-between items-center mb-10">
-                <h2 class="section-title-sm">NEPSE Index Overview</h2>
+                <div class="chart-header-left flex items-center gap-12">
+                  <h2 class="section-title-sm">Chart Overview</h2>
+                  <select id="sectorDropdown" class="sector-dropdown">
+                    <option value="NEPSE">NEPSE INDEX</option>
+                    <option value="BANKING">BANKING</option>
+                    <option value="DEVBANK">DEVBANK</option>
+                    <option value="FINANCE">FINANCE</option>
+                    <option value="FLOAT">FLOAT</option>
+                    <option value="HOTELS">HOTELS</option>
+                    <option value="HYDROPOWER">HYDROPOWER</option>
+                    <option value="INVESTMENT">INVESTMENT</option>
+                    <option value="LIFEINSU">LIFEINSU</option>
+                    <option value="MANUFACTURE">MANUFACTURE</option>
+                    <option value="MICROFINANCE">MICROFINANCE</option>
+                    <option value="MUTUAL">MUTUAL</option>
+                    <option value="NONLIFEINSU">NONLIFEINSU</option>
+                    <option value="OTHERS">OTHERS</option>
+                    <option value="SENFLOAT">SENFLOAT</option>
+                    <option value="SENSITIVE">SENSITIVE</option>
+                    <option value="TRADING">TRADING</option>
+                  </select>
+                </div>
                 <div class="time-selector flex gap-4">
                   <button class="time-btn active" data-time="1D">1D</button>
                   <button class="time-btn" data-time="1W">1W</button>
@@ -247,7 +268,7 @@
         <!-- ROW 3: OFFERINGS (FULL WIDTH) -->
         <div class="dashboard-offerings-section gap-16 mt-16">
           <div class="w-100">
-            <div class="table-card offerings-card h-max-content">
+            <div class="table-card offerings-card h-550">
               <div class="tabs-section-offerings">
                 <div class="tabs-navigation-minimal" id="offeringTabs">
                   <button class="tab-btn-min active" data-type="ipo-general">IPO</button>
@@ -259,7 +280,7 @@
                   <button class="tab-btn-min" data-type="debenture">Debenture</button>
                 </div>
               </div>
-              <div class="single-table-container-minimal scroll" id="offeringTableContainer" style="max-height: 300px">
+              <div class="single-table-container-minimal scroll" id="offeringTableContainer" style="max-height: max-content;">
                 <div class="loading-container shimmer">Loading...</div>
               </div>
             </div>
