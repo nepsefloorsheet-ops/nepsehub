@@ -117,11 +117,11 @@ const apiService = (() => {
 
     return {
         getMarketData: () => request('/homepage-data'),
-        getChartData: (timePeriod) => {
+        getChartData: (symbol, timePeriod) => {
             if (timePeriod === '1D') {
-                return request('/stock-chart/index/1D');
+                return request(`/stock-chart/index/1D/${symbol}`);
             }
-            return request(`/stock-chart/NEPSE?time=${timePeriod}`);
+            return request(`/stock-chart/${symbol}?time=${timePeriod}`);
         },
         getAnnouncements: () => request('/announcements'),
         getMarketTurnover: () => request('/market-turnover'),
