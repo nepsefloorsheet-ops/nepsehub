@@ -21,13 +21,11 @@
     { "source": "/rsi", "destination": "/pages/rsi.html" },
     { "source": "/ma", "destination": "/pages/ma.html" },
     { "source": "/crossovers", "destination": "/pages/crossovers.html" },
-    { "source": "/confluence", "destination": "/pages/confluence.html" },
     { "source": "/candlesticks", "destination": "/pages/candlesticks.html" },
     {
       "source": "/volume-shockers",
       "destination": "/pages/volume-shockers.html"
     },
-    { "source": "/breakouts", "destination": "/pages/breakouts.html" },
     { "source": "/calculator", "destination": "/pages/calculator.html" },
     {
       "source": "/target-calculator",
