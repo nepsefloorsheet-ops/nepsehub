@@ -4,7 +4,12 @@
  */
 
 // API Base URL
-const API_BASE = `${window.appConfig.api.baseUrl}/api/auth`;
+const config = window.appConfig || { api: { baseUrl: '' } };
+const API_BASE = `${config.api.baseUrl}/api/auth`;
+
+if (!window.appConfig) {
+    console.error("AuthService: window.appConfig is missing! Check config.js loading.");
+}
 
 // DOM Elements
 const loginForm = document.getElementById('login-form');

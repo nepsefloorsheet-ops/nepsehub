@@ -24,7 +24,7 @@ const offeringsModule = (() => {
   async function loadOfferings(type) {
     if (!elements.offeringContainer) return;
     
-    elements.offeringContainer.innerHTML = '<div class="loading-container shimmer">Loading...</div>';
+    elements.offeringContainer.innerHTML = '<div class="loading-container shimmer" style="height:350px;">Loading...</div>';
     
     try {
       const data = await offeringAPIMap[type]();
@@ -58,7 +58,7 @@ const offeringsModule = (() => {
         </tr>
       </thead>
       <tbody>
-        ${offerings.map(o => {
+        ${offerings.slice(0, 5).map(o => {
           const units = o.units ? o.units.toLocaleString() : '0';
           const amount = o.totalAmount ? o.totalAmount.toLocaleString() : '0';
           const statusClass = o.status === 'Open' ? 'positive' : o.status === 'ComingSoon' ? 'warning' : '';

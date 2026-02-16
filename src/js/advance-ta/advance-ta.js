@@ -276,15 +276,15 @@ const crosshairPlugin = {
     const {chartArea} = chart;
     
     if (type === 'mousemove' || type === 'mouseout') {
-        if (type === 'mousemove') {
-          const {x, y} = args.event;
-          if (chartArea && x >= chartArea.left && x <= chartArea.right && y >= chartArea.top && y <= chartArea.bottom) {
-            chart.crosshair.x = x;
-            chart.crosshair.y = y;
-          } else {
-            chart.crosshair.x = null;
-            chart.crosshair.y = null;
-          }
+       if (type === 'mousemove') {
+         const {x, y} = args.event;
+         if (x >= chartArea.left && x <= chartArea.right && y >= chartArea.top && y <= chartArea.bottom) {
+           chart.crosshair.x = x;
+           chart.crosshair.y = y;
+         } else {
+           chart.crosshair.x = null;
+           chart.crosshair.y = null;
+         }
        } else {
          chart.crosshair.x = null;
          chart.crosshair.y = null;
@@ -293,7 +293,7 @@ const crosshairPlugin = {
     }
   },
   afterDraw: (chart, args, options) => {
-    if (!chart.crosshair || chart.crosshair.x === null || !chart.chartArea) return;
+    if (!chart.crosshair || chart.crosshair.x === null) return;
     
     const {ctx, chartArea: {top, bottom, left, right}, scales: {x, y}} = chart;
     const {x: mouseX, y: mouseY} = chart.crosshair;
@@ -319,22 +319,10 @@ const crosshairPlugin = {
     const labelBg = isDark ? "#1e293b" : "#ffffff";
     const labelText = isDark ? "#f8fafc" : "#0f172a";
     const font = '11px "Inter", sans-serif';
+
     // X Label (Date)
-    const xVal = x.getValueForPixel(mouseX);
-    let xText = "";
-    
-    try {
-      if (chart.data.labels && chart.data.labels.length > 0) {
-        const xIndex = Math.round(xVal);
-        if (xIndex >= 0 && xIndex < chart.data.labels.length) {
-          xText = chart.data.labels[xIndex];
-        }
-      } else if (x.getLabelForValue) {
-        xText = x.getLabelForValue(xVal);
-      }
-    } catch (e) {
-      console.warn("Crosshair X-label error:", e);
-    }
+    const xIndex = Math.round(x.getValueForPixel(mouseX));
+    const xText = chart.data.labels[xIndex];
     
     if (xText) {
       ctx.font = font;
@@ -347,7 +335,6 @@ const crosshairPlugin = {
       ctx.fillRect(mouseX - rectW / 2, bottom, rectW, rectH);
       ctx.strokeStyle = options.color;
       ctx.setLineDash([]);
-      ctx.lineWidth = 1;
       ctx.strokeRect(mouseX - rectW / 2, bottom, rectW, rectH);
       
       ctx.fillStyle = labelText;
@@ -384,13 +371,6 @@ const crosshairPlugin = {
 if (typeof ChartZoom !== 'undefined') {
   Chart.register(ChartZoom);
 }
-if (typeof ChartAnnotation !== 'undefined') {
-  Chart.register(ChartAnnotation);
-}
-
-// Financial components will be registered by the inline script in index.html
-// This ensures proper load order
-
 Chart.register(crosshairPlugin);
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -409,40 +389,12 @@ document.addEventListener("DOMContentLoaded", () => {
   let comparisonData = null;
   let isComparisonMode = false;
   let currentChartType = "Line Chart"; // Default to Line Chart as requested
-  let showSR = true; // S&R toggle state
-  let showVolume = true; // Volume toggle state
-  let showEMA20 = false; // EMA 20 toggle state
-  let showEMA50 = false; // EMA 50 toggle state
 
   // Initialize Theme
   initTheme();
   
   // Initialize filters
   initFilters();
-
-  // Fetch Market Turnover
-  fetchMarketTurnover();
-
-  async function fetchMarketTurnover() {
-    const turnoverEl = document.querySelector(".turnover");
-    const volumeEl = document.querySelector(".volume");
-
-    try {
-      const response = await fetch("https://nepsehub-production.up.railway.app/market-turnover");
-      if (!response.ok) throw new Error("Failed to fetch turnover");
-      
-      const data = await response.json();
-      if (data && data.totalTurnover) {
-        const turnover = data.totalTurnover.totalTradedValue || 0;
-        const volume = data.totalTurnover.totalTradedQuantity || 0;
-
-        if (turnoverEl) turnoverEl.textContent = "Rs. " + turnover.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        if (volumeEl) volumeEl.textContent = volume.toLocaleString() + " Kitta";
-      }
-    } catch (error) {
-      console.error("Error fetching market turnover:", error);
-    }
-  }
 
   function initTheme() {
     // Read saved theme or fallback to light (as requested)
@@ -578,6 +530,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!response.ok) throw new Error("API Limit reached or Symbol not found");
       
       const data = await response.json();
+      console.log(`Successfully fetched data for ${symbol}:`, data);
 
       if (data.success && data.data && data.data.data) {
         if (placeholder) placeholder.style.display = "none";
@@ -589,6 +542,7 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error("Invalid data format received");
       }
     } catch (error) {
+      console.error(`Error fetching ${symbol}:`, error);
       if (placeholder) {
         placeholder.innerHTML = `
           <i class="fas fa-exclamation-triangle" style="color: #ef4444"></i>
@@ -596,127 +550,6 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
       }
     }
-  }
-
-  function calculateAdvancedSRZones(chartData) {
-    if (!chartData || chartData.length < 30) return [];
-
-    const data = [...chartData].reverse(); // Oldest to newest
-    const N = 3; // Swing window
-    
-    // 1. Identify Swing Points
-    const swingHighs = [];
-    const swingLows = [];
-
-    for (let i = N; i < data.length - N; i++) {
-        const currentHigh = parseFloat(data[i].High);
-        const currentLow = parseFloat(data[i].Low);
-        let isSwingHigh = true;
-        let isSwingLow = true;
-
-        for (let j = 1; j <= N; j++) {
-            if (parseFloat(data[i - j].High) >= currentHigh || parseFloat(data[i + j].High) >= currentHigh) isSwingHigh = false;
-            if (parseFloat(data[i - j].Low) <= currentLow || parseFloat(data[i + j].Low) <= currentLow) isSwingLow = false;
-        }
-
-        if (isSwingHigh) swingHighs.push({ price: currentHigh, index: i, volume: parseFloat(data[i].Volume) });
-        if (isSwingLow) swingLows.push({ price: currentLow, index: i, volume: parseFloat(data[i].Volume) });
-    }
-
-    // 2. Clustering into Zones
-    const clusterPoints = (points, type) => {
-        if (points.length === 0) return [];
-        const sorted = [...points].sort((a, b) => a.price - b.price);
-        const clusters = [];
-        let currentCluster = [sorted[0]];
-
-        for (let i = 1; i < sorted.length; i++) {
-            const avg = currentCluster.reduce((sum, p) => sum + p.price, 0) / currentCluster.length;
-            if ((sorted[i].price - avg) / avg < 0.01) { // 1% tolerance
-                currentCluster.push(sorted[i]);
-            } else {
-                clusters.push(currentCluster);
-                currentCluster = [sorted[i]];
-            }
-        }
-        clusters.push(currentCluster);
-
-        return clusters.map(cluster => {
-            const min = Math.min(...cluster.map(p => p.price));
-            const max = Math.max(...cluster.map(p => p.price));
-            return {
-                type,
-                min,
-                max,
-                points: cluster,
-                touchCount: cluster.length,
-                score: 0
-            };
-        });
-    };
-
-    let zones = [...clusterPoints(swingHighs, 'resistance'), ...clusterPoints(swingLows, 'support')];
-
-    const currentPrice = parseFloat(data[data.length - 1].Close);
-    const avgVol = data.reduce((sum, d) => sum + parseFloat(d.Volume), 0) / data.length;
-
-    // 3 & 4. Validate & Score
-    zones.forEach(zone => {
-        let reactionScore = 0;
-        let volScore = 0;
-
-        // Reaction size after swing points
-        zone.points.forEach(p => {
-            const lookback = 10;
-            if (p.index + lookback < data.length) {
-                const move = Math.abs(parseFloat(data[p.index + lookback].Close) - p.price) / p.price;
-                reactionScore += move;
-            }
-            if (p.volume > avgVol * 1.5) volScore += 1;
-        });
-
-        // Round number bonus
-        let psychBonus = 0;
-        [100, 500, 1000, 1500, 2000, 2500, 3000].forEach(rn => {
-            if (rn >= zone.min && rn <= zone.max) psychBonus = 2;
-        });
-
-        zone.score = (zone.touchCount * 2) + (reactionScore * 15) + volScore + psychBonus;
-        
-        // Status Flip Logic
-        if (currentPrice > zone.max) zone.currentStatus = 'support';
-        else if (currentPrice < zone.min) zone.currentStatus = 'resistance';
-        else zone.currentStatus = 'active_zone';
-    });
-
-    // Sort by strength and pick top 6 (3S, 3R)
-    const finalSupports = zones.filter(z => z.currentStatus === 'support').sort((a,b) => b.score - a.score).slice(0,3);
-    const finalResistances = zones.filter(z => z.currentStatus === 'resistance').sort((a,b) => b.score - a.score).slice(0,3);
-    const activeZones = zones.filter(z => z.currentStatus === 'active_zone').slice(0,1);
-
-    return [...finalSupports, ...finalResistances, ...activeZones];
-  }
-
-  function calculateEMA(data, period) {
-    if (data.length < period) return Array(data.length).fill(null);
-    const k = 2 / (period + 1);
-    const emaArray = Array(data.length).fill(null);
-    
-    // Simple SMA for first EMA point
-    let firstSMA = 0;
-    for (let i = 0; i < period; i++) {
-        firstSMA += data[i];
-    }
-    emaArray[period - 1] = firstSMA / period;
-
-    for (let i = period; i < data.length; i++) {
-        if (data[i] === null || emaArray[i - 1] === null) {
-            emaArray[i] = emaArray[i - 1];
-        } else {
-            emaArray[i] = (data[i] - emaArray[i - 1]) * k + emaArray[i - 1];
-        }
-    }
-    return emaArray;
   }
 
   function renderPriceChart(symbol, chartData) {
@@ -736,26 +569,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // Create sorted master labels
     const masterLabels = Array.from(allDates).sort();
     
-    const priceMap = new Map(rawData.map(d => [d.Date.split('T')[0], d]));
-
+    // Map prices to master labels
     const primaryPrices = masterLabels.map(date => {
-      const d = priceMap.get(date);
-      return d ? parseFloat(d.Close) : null;
+      const point = rawData.find(d => d.Date.split('T')[0] === date);
+      return point ? parseFloat(point.Close) : null;
     });
-
-    const candleData = masterLabels.map(date => {
-      const d = priceMap.get(date);
-      if (!d) return null;
-      // Using native Date for better compatibility
-      const timestamp = new Date(d.Date).getTime();
-      return {
-        x: timestamp,
-        o: parseFloat(d.Open),
-        h: parseFloat(d.High),
-        l: parseFloat(d.Low),
-        c: parseFloat(d.Close)
-      };
-    }).filter(d => d !== null); // Remove null entries
 
     let compPrices = null;
     if (rawCompData) {
@@ -766,59 +584,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Add buffer points for trading-view style gap
-    const BUFFER_SIZE = 30;
+    const BUFFER_SIZE = 10;
     const finalLabels = [...masterLabels];
     const finalPrimaryPrices = [...primaryPrices];
     const finalCompPrices = compPrices ? [...compPrices] : null;
-    // Don't add buffer to candlestick data - it breaks the chart
-    const finalCandleData = candleData;
 
-    // Map volume to master labels
-    const volumeData = masterLabels.map(date => {
-      const d = priceMap.get(date);
-      return d ? parseFloat(d.Volume) : 0;
-    });
-    const finalVolume = [...volumeData];
-
-    // Only add buffer points for non-candlestick data
     for (let i = 0; i < BUFFER_SIZE; i++) {
       finalLabels.push("");
       finalPrimaryPrices.push(null);
       if (finalCompPrices) finalCompPrices.push(null);
-      finalVolume.push(null);
-      // DO NOT add buffer to finalCandleData
     }
 
     const isDark = document.documentElement.getAttribute("data-theme") === "dark";
     const accentColor = getComputedStyle(document.documentElement).getPropertyValue("--accent-primary").trim() || "#4f46e5";
-    const textColor = isDark ? "#1e2022ff" : "#475569";
+    const textColor = isDark ? "#94a3b8" : "#475569";
     const gridColor = isDark ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.05)";
 
     // Default view: last 400 points
     let displayCount = 400;
     const initialMin = Math.max(0, finalLabels.length - displayCount);
 
-    // Millisecond-based bounds for Time Scale
-    const lastDataDate = masterLabels[masterLabels.length - 1];
-    const lastTime = new Date(lastDataDate).getTime();
-    const finalMaxMs = lastTime + (BUFFER_SIZE * 24 * 60 * 60 * 1000); // Add 30 days buffer
-    const startTimeStr = masterLabels[Math.max(0, masterLabels.length - displayCount)];
-    const initialMinMs = new Date(startTimeStr).getTime();
-
     let datasets = [];
     if (isComparisonMode && finalCompPrices) {
-       const mappedPrimary = currentChartType === "Candlestick Chart"
-         ? finalPrimaryPrices.map((v, i) => v !== null ? { x: new Date(masterLabels[i]).getTime(), y: v } : null).filter(d => d !== null)
-         : finalPrimaryPrices;
-         
-       const mappedComp = currentChartType === "Candlestick Chart"
-         ? finalCompPrices.map((v, i) => v !== null ? { x: new Date(masterLabels[i]).getTime(), y: v } : null).filter(d => d !== null)
-         : finalCompPrices;
-
        datasets = [
          {
            label: `${symbol} (LTP)`,
-           data: mappedPrimary,
+           data: finalPrimaryPrices,
            borderColor: accentColor,
            backgroundColor: "transparent",
            borderWidth: 2,
@@ -828,7 +619,7 @@ document.addEventListener("DOMContentLoaded", () => {
          },
          {
            label: `${comparisonSymbol} (LTP)`,
-           data: mappedComp,
+           data: finalCompPrices,
            borderColor: "#ef4444",
            backgroundColor: "transparent",
            borderWidth: 2,
@@ -838,175 +629,48 @@ document.addEventListener("DOMContentLoaded", () => {
          }
        ];
     } else {
-       if (currentChartType === "Candlestick Chart") {
-         console.log('=== CANDLESTICK DATA DEBUG ===');
-         console.log('Total candlestick points:', finalCandleData.length);
-         console.log('First 3 points:', finalCandleData.slice(0, 3));
-         console.log('Last 3 points:', finalCandleData.slice(-3));
-         
-         // Check for null values
-         const nullCount = finalCandleData.filter(d => d === null).length;
-         console.log('Null values in dataset:', nullCount);
-         
-         // Check for invalid data
-         const invalidData = finalCandleData.filter(d => {
-           if (!d) return true;
-           return !d.x || isNaN(d.o) || isNaN(d.h) || isNaN(d.l) || isNaN(d.c);
-         });
-         console.log('Invalid data points:', invalidData.length, invalidData.slice(0, 3));
-         
-         datasets.push({
-           label: `${symbol} (OHLC)`,
-           type: 'candlestick',
-           data: finalCandleData,
-           order: 1
-         });
-         console.log('Candlestick dataset created with', finalCandleData.length, 'data points');
-       } else {
-         const isArea = currentChartType === "Area";
-         const isBars = currentChartType === "Bars";
-         
-         datasets.push({
-            label: `${symbol} Close Price`,
-            data: finalPrimaryPrices,
-            borderColor: accentColor,
-            backgroundColor: isArea ? (context) => {
-              const chart = context.chart;
-              const {ctx, chartArea} = chart;
-              if (!chartArea) return null;
-              const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-              const baseColor = accentColor === '#6366f1' ? '99, 102, 241' : '79, 70, 229';
-              gradient.addColorStop(0, `rgba(${baseColor}, 0.2)`);
-              gradient.addColorStop(1, "transparent");
-              return gradient;
-            } : (isBars ? `rgba(${accentColor === '#6366f1' ? '99, 102, 241' : '79, 70, 229'}, 0.5)` : "transparent"),
-            borderWidth: isBars ? 1 : 2,
-            pointRadius: 0,
-            pointHoverRadius: 4,
-            tension: (isBars || currentChartType === "Line Chart") ? 0 : 0.1,
-            fill: isArea,
-            spanGaps: false,
-            order: 1
-          });
-       }
-    }
-
-    // Add Volume Dataset if enabled (but not for candlestick charts - causes data conflicts)
-    if (showVolume && !isComparisonMode && currentChartType !== "Candlestick Chart") {
-      datasets.push({
-        label: "Volume",
-        type: "bar",
-        data: finalVolume,
-        backgroundColor: "rgba(59, 130, 246, 0.4)",
-        borderColor: "rgba(59, 130, 246, 0.7)",
-        borderWidth: 1,
-        yAxisID: "yVolume",
-        order: 2
-      });
-    }
-
-    // Add EMA Datasets if enabled
-    if (!isComparisonMode) {
-      const closePrices = masterLabels.map(date => {
-          const d = priceMap.get(date);
-          return d ? parseFloat(d.Close) : null;
-      });
-
-      if (showEMA20) {
-        const ema20Raw = calculateEMA(closePrices, 20);
-        const ema20Data = currentChartType === "Candlestick Chart" 
-          ? ema20Raw.map((v, i) => v !== null ? { x: new Date(masterLabels[i]).getTime(), y: v } : null).filter(d => d !== null)
-          : ema20Raw;
-
-        datasets.push({
-          label: "EMA 20",
-          type: "line",
-          data: ema20Data,
-          borderColor: "#a855f7",
-          borderWidth: 1.5,
+       const isArea = currentChartType === "Area";
+       const isBars = currentChartType === "Bars";
+       
+       datasets = [{
+          label: `${symbol} Close Price`,
+          data: finalPrimaryPrices,
+          borderColor: accentColor,
+          backgroundColor: isArea ? (context) => {
+            const chart = context.chart;
+            const {ctx, chartArea} = chart;
+            if (!chartArea) return null;
+            const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+            const baseColor = accentColor === '#6366f1' ? '99, 102, 241' : '79, 70, 229';
+            gradient.addColorStop(0, `rgba(${baseColor}, 0.2)`);
+            gradient.addColorStop(1, "transparent");
+            return gradient;
+          } : (isBars ? `rgba(${accentColor === '#6366f1' ? '99, 102, 241' : '79, 70, 229'}, 0.5)` : "transparent"),
+          borderWidth: isBars ? 1 : 2,
           pointRadius: 0,
-          fill: false,
-          order: 0 // In front
-        });
-      }
-
-      if (showEMA50) {
-          const ema50Raw = calculateEMA(closePrices, 50);
-          const ema50Data = currentChartType === "Candlestick Chart" 
-            ? ema50Raw.map((v, i) => v !== null ? { x: new Date(masterLabels[i]).getTime(), y: v } : null).filter(d => d !== null)
-            : ema50Raw;
-
-        datasets.push({
-          label: "EMA 50",
-          type: "line",
-          data: ema50Data,
-          borderColor: "#f97316",
-          borderWidth: 1.5,
-          pointRadius: 0,
-          fill: false,
-          order: 0
-        });
-      }
+          pointHoverRadius: 4,
+          tension: (isBars || currentChartType === "Line Chart") ? 0 : 0.1,
+          fill: isArea,
+          spanGaps: false
+        }];
     }
+
     if (priceChart) {
       priceChart.destroy();
-      priceChart = null;
     }
 
-    // Comprehensive check for candlestick support
-    console.log('=== CHART RENDERING DEBUG ===');
-    console.log('Current Chart Type:', currentChartType);
-    console.log('Chart.controllers available:', Object.keys(Chart.controllers || {}));
-    
-    let chartType = "line";
-    let shouldUseCandlestick = false;
-    
-    if (currentChartType === "Candlestick Chart") {
-      // Check multiple possible ways the controller might be registered
-      const canRenderCandles = 
-        (typeof Chart.controllers.candlestick !== 'undefined') ||
-        (typeof Chart.controllers.Candlestick !== 'undefined') ||
-        (Chart.registry && Chart.registry.getController && Chart.registry.getController('candlestick'));
-      
-      console.log('Candlestick Controller Available:', canRenderCandles);
-      
-      if (canRenderCandles) {
-        chartType = "candlestick";
-        shouldUseCandlestick = true;
-        console.log('✓ Using Candlestick chart');
-      } else {
-        console.warn('⚠ Candlestick controller not found, falling back to Line');
-        currentChartType = "Line Chart";
-        // Reset buttons
-        const lb = document.getElementById("lineChartBtn");
-        const cb = document.getElementById("candleChartBtn");
-        if (lb) lb.classList.add("active");
-        if (cb) cb.classList.remove("active");
-      }
-    }
-    
-    console.log('Final Chart Type:', chartType);
-    console.log('Dataset Count:', datasets.length);
-    if (shouldUseCandlestick) {
-      console.log('Candlestick Data Sample:', finalCandleData.slice(0, 3).filter(d => d !== null));
-    }
+    const chartType = "line"; // Always line now as per previous simplicity request
 
     priceChart = new Chart(ctx, {
       type: chartType,
-      plugins: shouldUseCandlestick ? [] : [crosshairPlugin], // Disable crosshair for candlestick to avoid chartArea errors
+      plugins: [crosshairPlugin],
       data: {
-        labels: currentChartType === "Candlestick Chart" ? null : finalLabels,
+        labels: finalLabels,
         datasets: datasets
       },
       options: {
-        parsing: currentChartType === "Candlestick Chart" ? false : true,
         responsive: true,
         maintainAspectRatio: false,
-        layout: {
-          padding: {
-            right: 0
-          }
-        },
         plugins: {
           legend: { display: isComparisonMode },
           tooltip: {
@@ -1018,44 +682,29 @@ document.addEventListener("DOMContentLoaded", () => {
             borderColor: gridColor,
             borderWidth: 1
           },
-          annotation: {
-            annotations: {}
-          },
           crosshair: {
             color: isDark ? 'rgba(148, 163, 184, 0.8)' : 'rgba(71, 85, 105, 0.8)'
           },
           zoom: {
-            pan: { 
-              enabled: true, 
-              mode: 'x', 
-              threshold: 5 
-            },
+            pan: { enabled: true, mode: 'x', threshold: 5 },
             zoom: {
               wheel: { enabled: true },
               pinch: { enabled: true },
               mode: 'x',
-              scaleMode: 'y'
+              overScaleMode: 'y'
             },
             limits: {
-              x: { 
-                min: currentChartType === "Candlestick Chart" ? new Date(masterLabels[0]).getTime() : 0, 
-                max: currentChartType === "Candlestick Chart" ? finalMaxMs : finalLabels.length - 1 
-              }
+              x: { min: 0, max: finalLabels.length - 1 }
             }
           }
         },
         interaction: { intersect: false, mode: "index" },
         scales: {
           x: {
-            min: currentChartType === "Candlestick Chart" ? initialMinMs : initialMin,
-            max: currentChartType === "Candlestick Chart" ? finalMaxMs : finalLabels.length - 1,
+            min: initialMin,
+            max: finalLabels.length - 1,
             grid: { color: gridColor },
-            ticks: { color: textColor, maxTicksLimit: 10 },
-            type: currentChartType === "Candlestick Chart" ? 'timeseries' : 'category',
-            time: {
-              unit: 'day',
-              displayFormats: { day: 'MMM dd' }
-            }
+            ticks: { color: textColor, maxTicksLimit: 10 }
           },
           y: {
             position: 'right',
@@ -1069,56 +718,10 @@ document.addEventListener("DOMContentLoaded", () => {
               color: textColor,
               font: { size: 10 }
             }
-          },
-          yVolume: {
-            position: 'left',
-            display: false,
-            grid: { display: false },
-            beginAtZero: true,
-            grace: '300%' // This keeps volume bars at bottom
           }
         }
       }
     });
-
-    // Datasets already consolidated above
-
-    // Add S&R Annotations
-    const annotations = {};
-    
-    if (showSR && !isComparisonMode) {
-      const srZones = calculateAdvancedSRZones(chartData);
-      
-      srZones.forEach((zone, index) => {
-        const isSupport = zone.currentStatus === 'support';
-        const color = isSupport ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)';
-        const borderColor = isSupport ? 'rgba(34, 197, 94, 0.5)' : 'rgba(239, 68, 68, 0.5)';
-        const labelText = (isSupport ? 'S' : 'R') + ' Zone: ' + zone.min.toFixed(1) + ' - ' + zone.max.toFixed(1);
-
-        annotations[`zone${index}`] = {
-          type: 'box',
-          yMin: zone.min,
-          yMax: zone.max,
-          backgroundColor: color,
-          borderColor: borderColor,
-          borderWidth: 1,
-          label: {
-            display: true,
-            content: labelText,
-            position: 'end',
-            xAdjust: -10,
-            backgroundColor: isSupport ? '#22c55e' : '#ef4444',
-            color: isDark ? '#fff' : '#000',
-            font: { size: 9, weight: 'bold' },
-            padding: 4,
-            z: 15
-          }
-        };
-      });
-    }
-
-    priceChart.options.plugins.annotation.annotations = annotations;
-    priceChart.update();
 
     priceChart.isComparisonMode = isComparisonMode;
   }
@@ -1157,6 +760,7 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.addEventListener("click", () => {
         toolBtns.forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
+        console.log(`Tool selected: ${btn.title}`);
       });
     });
 
@@ -1220,99 +824,19 @@ document.addEventListener("DOMContentLoaded", () => {
           constructionModal.classList.remove("visible");
         }
       });
-
-      // Toggle Listener
-      const toggleSR = document.getElementById("toggleSR");
-      if (toggleSR) {
-         toggleSR.addEventListener("change", (e) => {
-           showSR = e.target.checked;
-           if (priceChart && lastFetchedData) {
-             renderPriceChart(currentSymbol, lastFetchedData);
-           }
-         });
-      }
-
-      const toggleVolume = document.getElementById("toggleVolume");
-      if (toggleVolume) {
-        toggleVolume.addEventListener("change", (e) => {
-          showVolume = e.target.checked;
-          if (priceChart && lastFetchedData) {
-            renderPriceChart(currentSymbol, lastFetchedData);
-          }
-        });
-      }
-
-      const toggleEMA20 = document.getElementById("toggleEMA20");
-      if (toggleEMA20) {
-        toggleEMA20.addEventListener("change", (e) => {
-          showEMA20 = e.target.checked;
-          if (priceChart && lastFetchedData) {
-            renderPriceChart(currentSymbol, lastFetchedData);
-          }
-        });
-      }
-
-      const toggleEMA50 = document.getElementById("toggleEMA50");
-      if (toggleEMA50) {
-        toggleEMA50.addEventListener("change", (e) => {
-          showEMA50 = e.target.checked;
-          if (priceChart && lastFetchedData) {
-            renderPriceChart(currentSymbol, lastFetchedData);
-          }
-        });
-      }
-
-      // Chart Type Toggles
-      const lineBtn = document.getElementById("lineChartBtn");
-      const candleBtn = document.getElementById("candleChartBtn");
-
-      const updateChartType = (type) => {
-        currentChartType = type;
-        lineBtn.classList.toggle("active", type === "Line Chart");
-        candleBtn.classList.toggle("active", type === "Candlestick Chart");
-        if (priceChart && lastFetchedData) {
-          renderPriceChart(currentSymbol, lastFetchedData);
-        }
-      };
-
-      if (lineBtn) lineBtn.addEventListener("click", () => updateChartType("Line Chart"));
-      if (candleBtn) candleBtn.addEventListener("click", () => updateChartType("Candlestick Chart"));
     }
   }
 
   function updateChartTimeframe(tf) {
     if (!priceChart || !lastFetchedData) return;
 
-    const isCandle = currentChartType === "Candlestick Chart";
-    const dataLength = isCandle ? lastFetchedData.length : priceChart.data.labels.length;
+    const dataLength = priceChart.data.labels.length;
     let newMin = 0;
 
-    if (isCandle) {
-      // Time Scale (ms timestamps)
-      const lastPoint = lastFetchedData[0]; // Data is reversed in lastFetchedData? Wait.
-      // Wait, in fetchSymbolData: lastFetchedData = data.data.data;
-      // In renderPriceChart: rawData = [...chartData].reverse();
-      // So lastFetchedData is usually newest-to-oldest from the API.
-      
-      const masterLabels = [...new Set(lastFetchedData.map(d => d.Date.split('T')[0]))].sort();
-      const newestDate = masterLabels[masterLabels.length - 1];
-      const newestTs = new Date(newestDate).getTime();
-
-      switch(tf) {
-        case "1M": newMin = newestTs - (30 * 24 * 60 * 60 * 1000); break;
-        case "1Y": newMin = newestTs - (365 * 24 * 60 * 60 * 1000); break;
-        case "ALL": 
-          // For timeseries, min can be the actual timestamp of the first point
-          newMin = new Date(masterLabels[0]).getTime(); 
-          break;
-      }
-    } else {
-      // Category Scale (indices)
-      switch(tf) {
-        case "1M": newMin = Math.max(0, dataLength - 22 - 30); break; // including buffer
-        case "1Y": newMin = Math.max(0, dataLength - 250 - 30); break;
-        case "ALL": newMin = 0; break;
-      }
+    switch(tf) {
+      case "1M": newMin = Math.max(0, dataLength - 22); break; // ~22 trading days
+      case "1Y": newMin = Math.max(0, dataLength - 250); break; // ~250 trading days
+      case "ALL": newMin = 0; break;
     }
 
     priceChart.options.scales.x.min = newMin;
@@ -1347,6 +871,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const refreshBtn = document.getElementById("refresh-btn");
   if (refreshBtn) {
     refreshBtn.addEventListener("click", () => {
+      console.log("Refresh clicked");
       const btnIcon = refreshBtn.querySelector("i");
       if (btnIcon) btnIcon.classList.add("fa-spin");
 
