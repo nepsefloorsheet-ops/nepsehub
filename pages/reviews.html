@@ -4,7 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Reviews | NEPSE Hub</title>
-    <link rel="shortcut icon" href="../img/favicon/NH.png" type="image/x-icon" />
+    <link
+      rel="shortcut icon"
+      href="../img/favicon/NH.png"
+      type="image/x-icon"
+    />
     <link rel="stylesheet" href="../src/css/global.css" />
     <link rel="stylesheet" href="../src/css/utils/reviews.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -312,7 +316,7 @@
           status.style.display = "block";
           status.style.color = "var(--accent-warning)";
           status.innerHTML =
-            '<i class="fas fa-exclamation-triangle"></i> Please <a href="login.html" style="text-decoration: underline; color: inherit;">Log In</a> to submit a review.';
+            '<i class="fas fa-exclamation-triangle"></i> Please <a href="/login" style="text-decoration: underline; color: inherit;">Log In</a> to submit a review.';
         }
 
         form.addEventListener("submit", async (e) => {
